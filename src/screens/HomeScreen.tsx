@@ -18,7 +18,7 @@ export const HomeScreen = () => {
                 {/* Hero Section */}
                 <View style={styles.heroSection}>
                     <View style={styles.avatarPlaceholder}>
-                        <Text style={styles.avatarText}>Semih</Text>
+                        <Image source={require('../../assets/mr.jpeg')} style={styles.avatarImage} resizeMode="cover" />
                     </View>
                     <Text style={styles.title}>Game Developer</Text>
                     <Text style={styles.subtitle}>Coder • React Native • Modeling • Sculpting • Narrative Designer</Text>
@@ -115,12 +115,11 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         borderWidth: 2,
         borderColor: colors.primary,
+        overflow: 'hidden',
     },
-    avatarText: {
-        fontSize: 32,
-        color: colors.text,
-        fontWeight: '800',
-        letterSpacing: 2,
+    avatarImage: {
+        width: '100%',
+        height: '100%',
     },
     title: {
         fontSize: 28,

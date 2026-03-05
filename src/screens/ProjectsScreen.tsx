@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Dimensions } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { ChevronRight, ChevronLeft } from 'lucide-react-native';
 import { colors } from '../theme/colors';
@@ -100,28 +100,25 @@ const GAME_PROJECTS = [
         description: 'Bu projede developer ve animator rollerinde görev aldım. ',
         cover: require('../../assets/fi_cover.jpg'),
         images: [require('../../assets/fi_gm.png'), require('../../assets/fi_gpz_.png'), require('../../assets/fi_bomb.png'), require('../../assets/fi_mm.png'), require('../../assets/fi_tt.png')],
-    }
+    },
+    {
+        id: 'g9',
+        title: 'Pandoras Redemption',
+        engine: 'Unreal Engine',
+        engineIcon: require('../../assets/unreal_icon.png'),
+        platform: 'PC',
+        status: 'Solo Student Project',
+        description: 'Bu projedeki tüm geliştirmeler ve tasarımlar tamamen bana ait. Bu noktada beni en iyi yansıtan oyunlardan bir tanesi de budur. Şu anda geliştirme aşamasında görselleri yüklenecektir.',
+    },
 ];
 
 // ————— Diğer Kategoriler (Örnek) —————
 const OTHER_PROJECTS = [
     {
         id: 'o1',
-        title: 'Focus Hub',
+        title: 'Lingua',
         category: 'Mobile App',
         description: 'React Native productivity app with gamified tasks and habit tracking.',
-    },
-    {
-        id: 'o2',
-        title: 'Mech-01 Protocol',
-        category: '3D Art',
-        description: 'High-poly hard surface modeling of a combat mech. Modeled in Blender, textured in Substance.',
-    },
-    {
-        id: 'o3',
-        title: 'The Lost Echoes',
-        category: 'Writing / Lore',
-        description: 'Interactive sci-fi fiction focusing on branching narratives and worldbuilding mechanics.',
     },
 ];
 
@@ -157,14 +154,7 @@ export const ProjectsScreen = () => {
                         onPress={() => navigation.navigate('GameDetail', { game })}
                     >
                         <GlassCard style={styles.gameCard} intensity={20}>
-                            {(game.cover || (game.images && game.images.length > 0)) && (
-                                <Image
-                                    source={game.cover || game.images[0]}
-                                    style={[styles.gamePreview, { backgroundColor: 'rgba(0,0,0,0.3)' }]}
-                                    resizeMode="contain"
-                                />
-                            )}
-                            <View style={styles.gameCardContent}>
+                            {/* Removed Cover Image block based on user request */}                            <View style={styles.gameCardContent}>
                                 <View style={styles.gameInfo}>
                                     <Text style={styles.gameTitle}>{game.title}</Text>
                                     <View style={styles.engineRow}>
@@ -305,7 +295,7 @@ const styles = StyleSheet.create({
     },
     gamePreview: {
         width: '100%',
-        height: 240,
+        height: Dimensions.get('window').height * 0.7,
         borderRadius: 12,
         marginBottom: 12,
     },

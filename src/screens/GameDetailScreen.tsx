@@ -32,15 +32,7 @@ export const GameDetailScreen = () => {
                     )}
                 </View>
 
-                {/* Game Banner / Cover */}
-                {game.cover && (
-                    <Image
-                        source={game.cover}
-                        style={[styles.coverImage, { backgroundColor: 'rgba(0,0,0,0.3)' }]}
-                        resizeMode="contain"
-                    />
-                )}
-
+                {/* Top Banner moved to bottom */}
                 {/* Info Card */}
                 <GlassCard style={styles.infoCard} intensity={20}>
                     <View style={styles.infoRow}>
@@ -159,6 +151,15 @@ export const GameDetailScreen = () => {
                     </>
                 )}
 
+                {/* Game Banner / Cover (Moved to bottom) */}
+                {game.cover && (
+                    <Image
+                        source={game.cover}
+                        style={[styles.coverImage, { backgroundColor: 'rgba(0,0,0,0.3)' }]}
+                        resizeMode="contain"
+                    />
+                )}
+
                 <View style={{ height: 80 }} />
             </ScrollView>
         </View>
@@ -196,7 +197,7 @@ const styles = StyleSheet.create({
     },
     coverImage: {
         width: '100%',
-        height: 200,
+        height: Dimensions.get('window').height * 0.8,
         borderRadius: 16,
         marginBottom: 20,
     },
