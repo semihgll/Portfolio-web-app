@@ -18,10 +18,9 @@ export const ContactScreen = () => {
                 </View>
 
                 <GlassCard style={styles.card} intensity={25}>
-                    <SocialButton icon={<Mail color={colors.text} size={24} />} title="hello@creator.dev" />
-                    <SocialButton icon={<Github color={colors.text} size={24} />} title="github.com/creator" />
-                    <SocialButton icon={<Linkedin color={colors.text} size={24} />} title="linkedin.com/in/creator" />
-                    <SocialButton icon={<Twitter color={colors.text} size={24} />} title="@creator_dev" />
+                    <SocialButton icon={<Mail color={colors.text} size={24} />} title="semihgll@icloud.com" />
+                    {/*<SocialButton icon={<Github color={colors.text} size={24} />} title="github.com/creator" />*/}
+                    <SocialButton icon={<Linkedin color={colors.text} size={24} />} title="linkedin.com/in/semihgul" />
                 </GlassCard>
 
                 <View style={styles.footer}>

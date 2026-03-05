@@ -10,15 +10,15 @@ import { AbstractBackground } from '../components/AbstractBackground';
 const GAME_PROJECTS = [
     {
         id: 'g1',
-        title: 'Cyber Neon',
-        engine: 'Unreal Engine 5',
-        engineIcon: require('../../assets/unreal_icon.png'),
-        platform: 'PC',
-        status: 'In Development',
-        description: 'A fast-paced cyberpunk platformer built with Unreal Engine 5. Features custom shaders and dynamic lighting.',
+        title: 'Abonetor',
+        engine: 'Unity',
+        engineIcon: require('../../assets/unity_icon.png'),
+        platform: 'Mobile',
+        status: 'Published',
+        description: 'Bu proje fikir olarak ortaya konulmuş ancak geliştirme aşamasında sıfır noktasında bulunan bir oyundu.Mekanikleri tasarlanma aşamasındayken ekibe katıldım. Projenin geliştirme kısımını devaralarak çok hızlı bir şekilde bitirdim. Bitirmemizle birlikte bir çok yarışmaya girişimci ruhumuzla lisede başvurduk. Başarılar elde ettik.',
         cover: null,
         awards: [
-            { title: 'Best Visuals', event: 'Example Game Jam 2024', rank: '🥇 1st Place', rankColor: '#FFD700' },
+            { title: 'Netmarble Game Jam & Incubation Program', event: 'Incube Programında Barış Özistek gibi değerli insanlardan pazarlama ve geliştirme konusunda çok değerli eğitimler aldık. Bu programı 2.likle bitirdik. Çok değerli ödüller aldık.', rank: '2st Place', rankColor: '#ffffffff' },
         ],
     },
     {

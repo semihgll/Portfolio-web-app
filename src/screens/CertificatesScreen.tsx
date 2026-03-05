@@ -17,23 +17,31 @@ const CERTIFICATES = [
     },
 ];
 
-const GAME_JAMS = [
-    {
-        id: 1,
-        title: 'Example Game Jam',
-        date: '2024',
-        duration: '48 hours',
-        description: 'Game Jam açıklaması. Kendi game jam bilgilerini ekle!',
-    },
-];
+
 
 const EVENTS = [
     {
         id: 1,
-        title: 'Example Event',
-        organizer: 'Example Organizer',
-        date: '2024',
-        description: 'Etkinlik açıklaması. Kendi etkinlik bilgilerini ekle!',
+        title: 'ITU Dijifikir Yarışması & Bilişim Teknolojileri Zirvesi',
+        organizer: 'İTÜ',
+        date: '2020',
+        description: 'Bu etkinlikte hem yarışmaya katıldım hem de zirveye katılarak çok önemli bilgiler edindim.',
+    },
+    {
+        id: 2,
+        title: 'Global Game Jam',
+        organizer: 'İzmir Ekonomi Üniversitesi',
+        date: '2020',
+        duration: '48 hours',
+        description: 'Çok eğlendiğim bir etkinlikti. Zamana karşı verdiğimiz mücadele bana çok fazla deneyim kattı.',
+    },
+    {
+        id: 3,
+        title: 'Global Bodjam',
+        organizer: 'Muğla Sıtkı Koçman Üniversitesi',
+        date: '2023',
+        duration: '48 hours',
+        description: 'Elimizden gelenin en iyisini takım olarak yapmaya çalıştık.',
     },
 ];
 
@@ -69,19 +77,7 @@ export const CertificatesScreen = () => {
                     </TouchableOpacity>
                 ))}
 
-                {/* Section: Game Jams */}
-                <Text style={styles.sectionLabel}>Game Jams</Text>
 
-                {GAME_JAMS.map((jam) => (
-                    <GlassCard key={jam.id} style={styles.certCard} intensity={20}>
-                        <View style={styles.compHeader}>
-                            <Text style={styles.certTitle}>{jam.title}</Text>
-                            <Text style={styles.durationBadge}>{jam.duration}</Text>
-                        </View>
-                        <Text style={styles.certDate}>{jam.date}</Text>
-                        <Text style={styles.certDesc}>{jam.description}</Text>
-                    </GlassCard>
-                ))}
 
                 {/* Section: Etkinlikler */}
                 <Text style={styles.sectionLabel}>Events</Text>
