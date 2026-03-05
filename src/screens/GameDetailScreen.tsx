@@ -1,7 +1,7 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Modal, Pressable, Dimensions } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { ChevronLeft } from 'lucide-react-native';
+import { ChevronLeft, X } from 'lucide-react-native';
 import { colors } from '../theme/colors';
 import { GlassCard } from '../components/GlassCard';
 import { AbstractBackground } from '../components/AbstractBackground';
@@ -10,6 +10,7 @@ export const GameDetailScreen = () => {
     const route = useRoute<any>();
     const navigation = useNavigation<any>();
     const game = route.params?.game;
+    const [selectedImage, setSelectedImage] = useState<any>(null);
 
     if (!game) return null;
 
@@ -33,7 +34,11 @@ export const GameDetailScreen = () => {
 
                 {/* Game Banner / Cover */}
                 {game.cover && (
-                    <Image source={game.cover} style={styles.coverImage} resizeMode="cover" />
+                    <Image
+                        source={game.cover}
+                        style={[styles.coverImage, { backgroundColor: 'rgba(0,0,0,0.3)' }]}
+                        resizeMode="contain"
+                    />
                 )}
 
                 {/* Info Card */}
@@ -84,15 +89,55 @@ export const GameDetailScreen = () => {
                 {game.images && game.images.length > 0 && (
                     <>
                         <Text style={styles.sectionLabel}>Gallery</Text>
-                        <View style={styles.galleryGrid}>
+                        <ScrollView
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            contentContainerStyle={styles.galleryScroll}
+                        >
                             {game.images.map((img: any, index: number) => (
-                                <GlassCard key={index} style={styles.galleryCard} intensity={20}>
-                                    <Image source={img} style={styles.galleryImage} resizeMode="cover" />
-                                </GlassCard>
+                                <TouchableOpacity
+                                    key={index}
+                                    activeOpacity={0.9}
+                                    onPress={() => setSelectedImage(img)}
+                                >
+                                    <GlassCard style={styles.galleryCard} intensity={20}>
+                                        <Image source={img} style={styles.galleryImage} resizeMode="cover" />
+                                    </GlassCard>
+                                </TouchableOpacity>
                             ))}
-                        </View>
+                        </ScrollView>
                     </>
                 )}
+
+                {/* Modal for Full Screen Image */}
+                <Modal
+                    visible={!!selectedImage}
+                    transparent={true}
+                    animationType="fade"
+                    onRequestClose={() => setSelectedImage(null)}
+                >
+                    <View style={styles.modalOverlay}>
+                        <Pressable
+                            style={styles.modalBgClose}
+                            onPress={() => setSelectedImage(null)}
+                        />
+                        <View style={styles.modalContent}>
+                            <TouchableOpacity
+                                style={styles.modalCloseBtn}
+                                onPress={() => setSelectedImage(null)}
+                            >
+                                <X color="#fff" size={32} />
+                            </TouchableOpacity>
+                            {selectedImage && (
+                                <Image
+                                    source={selectedImage}
+                                    style={styles.fullImage}
+                                    resizeMode="contain"
+                                />
+                            )}
+                        </View>
+                    </View>
+                </Modal>
 
                 {/* Awards */}
                 {game.awards && game.awards.length > 0 && (
@@ -224,19 +269,49 @@ const styles = StyleSheet.create({
         aspectRatio: 16 / 9,
         backgroundColor: '#000',
     },
-    galleryGrid: {
-        flexDirection: 'column',
-        gap: 12,
-        marginBottom: 16,
+    galleryScroll: {
+        paddingRight: 20,
+        paddingBottom: 4,
     },
     galleryCard: {
         padding: 0,
         overflow: 'hidden',
         backgroundColor: 'rgba(20, 20, 20, 0.4)',
+        width: 280,
+        height: 160,
+        marginRight: 12,
     },
     galleryImage: {
         width: '100%',
-        height: 200,
+        height: '100%',
+    },
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.9)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modalBgClose: {
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+    },
+    modalContent: {
+        width: '90%',
+        height: '80%',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modalCloseBtn: {
+        position: 'absolute',
+        top: -40,
+        right: 0,
+        zIndex: 10,
+    },
+    fullImage: {
+        width: '100%',
+        height: '100%',
+        borderRadius: 12,
     },
     sectionLabel: {
         fontSize: 18,

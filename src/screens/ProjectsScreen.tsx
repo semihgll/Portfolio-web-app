@@ -28,16 +28,79 @@ const GAME_PROJECTS = [
         engine: 'Unity',
         engineIcon: require('../../assets/unity_icon.png'),
         platform: 'VR, PC',
-        status: 'Game Jam',
-        description: 'yapmalıyız gibi bir çok değerli deneyimler kazandım.',
+        status: 'Game Jam Game',
+        description: 'Bu proje bir game jam projesi ve VR olarak game jam oyunu geliştirmek zor bir tercihdi. Lisede olmam bu konuda heyecanlı olmam sayesinde bu projeyi ekipçe çıkarabildik.',
         cover: null,
-        youtubeId: '38uq5rJSv84', // Örnek ID, kendi videonun ID'siyle değiştirebilirsin
+        youtubeId: 'XnAu-dD7-dg?si=gOp7bKwqrWc5xJCZ', // Örnek ID, kendi videonun ID'siyle değiştirebilirsin
         images: [], // Buraya ek görsellerin require() hallerini ekleyebilirsin
-        awards: [
-            { title: 'Netmarble Game Jam & Incubation Program', event: 'Incube Programında Barış Özistek gibi değerli insanlardan pazarlama ve geliştirme konusunda çok değerli eğitimler aldık. Bu programı 2.likle bitirdik. Çok değerli ödüller aldık.', rank: '2st Place', rankColor: '#ffffffff' },
-        ],
-    },
 
+    },
+    {
+        id: 'g3',
+        title: 'Cymatics Puzzle!',
+        engine: 'Mobile',
+        engineIcon: require('../../assets/unity_icon.png'),
+        platform: 'Mobile App Store',
+        status: 'Expired',
+        description: 'Bu projede kendimi geliştirmek için daha farklı alanlara yöneldim. 2D piksellerden oluşturulmuş bir görseli Unity içinde okutarak her pikselin dünya üzerinde bir noktaya gelmesini sağladım. Daha sonrasında doğru konumları hafızada tutup random şekilde hareket etmelerini sağladım her bir taneciğin. Önümüzdeki leverlar ile kumların frekanslarını değiştirip doğru konumlarına gelmelerini sağlayan bir sistem yazdım. Bu sistemlerin bir araya gelmesiyle de cymatics fenomeninin simüle edilmesini sağladım.Bu proje daha benim dijital oyun tasarımı bölümüne başlamadan geliştirdiğim projelerden biri.',
+        cover: null,
+        youtubeId: 'hZ9DVCq2h3Y', // Örnek ID, kendi videonun ID'siyle değiştirebilirsin
+        images: [], // Buraya ek görsellerin require() hallerini ekleyebilirsin
+
+    },
+    {
+        id: 'g4',
+        title: 'Math Pong',
+        engine: 'Unity',
+        engineIcon: require('../../assets/unity_icon.png'),
+        platform: 'Mobile App Store',
+        status: 'Expired',
+        description: 'Bu projede developer olarak görev aldım. Fizik ile hatalı oluşabilecek her işlemi matematik ile önceden planlayarak o dönemde popüler olan bir oyunun mobil versiyonunu geliştirdim. Bu proje daha benim dijital oyun tasarımı bölümüne başlamadan geliştirdiğim projelerden biri.',
+        youtubeId: 'mAMcvhiDTlc', // Örnek ID, kendi videonun ID'siyle değiştirebilirsin
+        images: [], // Buraya ek görsellerin require() hallerini ekleyebilirsin
+
+    },
+    {
+        id: 'g5',
+        title: 'Astroneer',
+        engine: 'Unity',
+        engineIcon: require('../../assets/unity_icon.png'),
+        platform: 'PC',
+        status: 'Game Jam Game',
+        description: 'Bu projede developer olarak görev aldım. Dijital tasarımı bölümünde okurken katıldığım ilk game jam projesi. Diyalog sistemi tasarımı bölümünde okurken katıldığım ilk game jam projesi. Kazma mekanikleri harici tüm mekanikleri ben geliştirdim. ',
+        images: [require('../../assets/astro_dialog.png'), require('../../assets/astro_env.png'), require('../../assets/astro_menu.png')],
+    },
+    {
+        id: 'g6',
+        title: 'Whisper Woods',
+        engine: 'Unity',
+        engineIcon: require('../../assets/unity_icon.png'),
+        platform: 'PC',
+        status: 'Student Project',
+        description: 'Bu projede developer, texture artist, foliage designer, environment artist ve tester olarak görev aldım. ',
+        images: [require('../../assets/ww_chase.png'), require('../../assets/ww_esc.png'), require('../../assets/ww_mm.png'), require('../../assets/ww_esc.png'), require('../../assets/ww_text.png')],
+    },
+    {
+        id: 'g7',
+        title: 'Empire Conquest',
+        engine: 'Unity',
+        engineIcon: require('../../assets/unity_icon.png'),
+        platform: 'PC',
+        status: 'Game Jam Game',
+        description: 'Bu projede developer, level design ve game design rollerinde görev aldım. ',
+        images: [require('../../assets/eq_win.png'), require('../../assets/eq_start.png'), require('../../assets/eq_mm.png'), require('../../assets/eq_gp.png'), require('../../assets/eq_game.png')],
+    },
+    {
+        id: 'g8',
+        title: 'Forgotten Inventions',
+        engine: 'Unity',
+        engineIcon: require('../../assets/unity_icon.png'),
+        platform: 'PC',
+        status: 'Student Project',
+        description: 'Bu projede developer ve animator rollerinde görev aldım. ',
+        cover: require('../../assets/fi_cover.jpg'),
+        images: [require('../../assets/fi_gm.png'), require('../../assets/fi_gpz_.png'), require('../../assets/fi_bomb.png'), require('../../assets/fi_mm.png'), require('../../assets/fi_tt.png')],
+    }
 ];
 
 // ————— Diğer Kategoriler (Örnek) —————
@@ -94,17 +157,35 @@ export const ProjectsScreen = () => {
                         onPress={() => navigation.navigate('GameDetail', { game })}
                     >
                         <GlassCard style={styles.gameCard} intensity={20}>
+                            {(game.cover || (game.images && game.images.length > 0)) && (
+                                <Image
+                                    source={game.cover || game.images[0]}
+                                    style={[styles.gamePreview, { backgroundColor: 'rgba(0,0,0,0.3)' }]}
+                                    resizeMode="contain"
+                                />
+                            )}
                             <View style={styles.gameCardContent}>
                                 <View style={styles.gameInfo}>
                                     <Text style={styles.gameTitle}>{game.title}</Text>
-                                    <Text style={styles.gameEngine}>{game.engine}</Text>
+                                    <View style={styles.engineRow}>
+                                        {game.engineIcon && (
+                                            <Image
+                                                source={game.engineIcon}
+                                                style={styles.engineIconSmall}
+                                                resizeMode="contain"
+                                            />
+                                        )}
+                                        <Text style={styles.gameEngine}>{game.engine}</Text>
+                                    </View>
                                     <Text style={styles.gameStatus}>{game.status}</Text>
                                 </View>
-                                <Image
-                                    source={game.engineIcon}
-                                    style={styles.engineIcon}
-                                    resizeMode="contain"
-                                />
+                                {!(game.cover || (game.images && game.images.length > 0)) && game.engineIcon && (
+                                    <Image
+                                        source={game.engineIcon}
+                                        style={styles.engineIcon}
+                                        resizeMode="contain"
+                                    />
+                                )}
                             </View>
                         </GlassCard>
                     </TouchableOpacity>
@@ -209,6 +290,24 @@ const styles = StyleSheet.create({
         width: 44,
         height: 44,
         tintColor: colors.text,
+        opacity: 0.8,
+    },
+    engineIconSmall: {
+        width: 16,
+        height: 16,
+        tintColor: colors.primary,
+        marginRight: 6,
+    },
+    engineRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 4,
+    },
+    gamePreview: {
+        width: '100%',
+        height: 240,
+        borderRadius: 12,
+        marginBottom: 12,
     },
 
     // Standard project card
