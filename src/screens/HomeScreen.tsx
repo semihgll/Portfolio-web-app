@@ -18,7 +18,7 @@ export const HomeScreen = () => {
                 {/* Hero Section */}
                 <View style={styles.heroSection}>
                     <View style={styles.avatarPlaceholder}>
-                        <Image source={require('../../assets/mr.jpeg')} style={styles.avatarImage} resizeMode="cover" />
+                        <Image source={require('../../assets/me.jpeg')} style={styles.avatarImage} resizeMode="cover" />
                     </View>
                     <Text style={styles.title}>Game Developer</Text>
                     <Text style={styles.subtitle}>Coder • React Native • Modeling • Sculpting • Narrative Designer</Text>
