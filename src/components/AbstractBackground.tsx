@@ -65,7 +65,7 @@ export const AbstractBackground = () => {
                 ]}
             >
                 <LinearGradient
-                    colors={['rgba(255, 255, 255, 0.05)', 'rgba(255, 255, 255, 0.01)']}
+                    colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
                     style={styles.gradient}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 1 }}
@@ -89,7 +89,7 @@ export const AbstractBackground = () => {
                 ]}
             >
                 <LinearGradient
-                    colors={['rgba(255, 255, 255, 0.03)', 'rgba(255, 255, 255, 0)']}
+                    colors={['rgba(255, 255, 255, 0.12)', 'rgba(255, 255, 255, 0.01)']}
                     style={styles.gradient}
                     start={{ x: 1, y: 0 }}
                     end={{ x: 0, y: 1 }}

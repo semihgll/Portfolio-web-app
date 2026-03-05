@@ -106,8 +106,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     avatarPlaceholder: {
-        width: 100,
-        height: 100,
+        width: 200,
+        height: 200,
         borderRadius: 50,
         backgroundColor: 'rgba(255,255,255,0.05)',
         justifyContent: 'center',
