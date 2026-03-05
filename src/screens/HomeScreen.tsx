@@ -18,10 +18,10 @@ export const HomeScreen = () => {
                 {/* Hero Section */}
                 <View style={styles.heroSection}>
                     <View style={styles.avatarPlaceholder}>
-                        <Text style={styles.avatarText}>SC</Text>
+                        <Text style={styles.avatarText}>Semih</Text>
                     </View>
-                    <Text style={styles.title}>Creative Developer</Text>
-                    <Text style={styles.subtitle}>GAME DEV • MOBILE • 3D ART • WRITER</Text>
+                    <Text style={styles.title}>Game Developer</Text>
+                    <Text style={styles.subtitle}>Coder • React Native • Modeling • Sculpting • Narrative Designer</Text>
                     <Text style={styles.description}>
                         Bridging the gap between imagination and reality through code, art, and immersive storytelling.
                     </Text>

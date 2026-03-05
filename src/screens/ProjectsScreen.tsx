@@ -17,6 +17,22 @@ const GAME_PROJECTS = [
         status: 'Published',
         description: 'Bu proje fikir olarak ortaya konulmuş ancak geliştirme aşamasında sıfır noktasında bulunan bir oyundu.Mekanikleri tasarlanma aşamasındayken ekibe katıldım. Projenin geliştirme kısımını devaralarak çok hızlı bir şekilde bitirdim. Bitirmemizle birlikte bir çok yarışmaya girişimci ruhumuzla lisede başvurduk. Aynı zamanda yine bu proje ile Abbas Güçlü İle Büyük Oyun Yarışmasına katıldık. Bu yarışmada derece elde edemesek de televizyonda canlı yayın ve stres altında neler yapmalıyız gibi bir çok değerli deneyimler kazandım.',
         cover: null,
+        youtubeId: '38uq5rJSv84', // Örnek ID, kendi videonun ID'siyle değiştirebilirsin
+        images: [], // Buraya ek görsellerin require() hallerini ekleyebilirsin
+        awards: [
+            { title: 'Netmarble Game Jam & Incubation Program', event: 'Incube Programında Barış Özistek gibi değerli insanlardan pazarlama ve geliştirme konusunda çok değerli eğitimler aldık. Bu programı 2.likle bitirdik. Çok değerli ödüller aldık.', rank: '2st Place', rankColor: '#ffffffff' },
+        ],
+    }, {
+        id: 'g2',
+        title: 'VR Elements',
+        engine: 'Unity',
+        engineIcon: require('../../assets/unity_icon.png'),
+        platform: 'VR, PC',
+        status: 'Game Jam',
+        description: 'yapmalıyız gibi bir çok değerli deneyimler kazandım.',
+        cover: null,
+        youtubeId: '38uq5rJSv84', // Örnek ID, kendi videonun ID'siyle değiştirebilirsin
+        images: [], // Buraya ek görsellerin require() hallerini ekleyebilirsin
         awards: [
             { title: 'Netmarble Game Jam & Incubation Program', event: 'Incube Programında Barış Özistek gibi değerli insanlardan pazarlama ve geliştirme konusunda çok değerli eğitimler aldık. Bu programı 2.likle bitirdik. Çok değerli ödüller aldık.', rank: '2st Place', rankColor: '#ffffffff' },
         ],

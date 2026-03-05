@@ -32,13 +32,8 @@ export const GameDetailScreen = () => {
                 </View>
 
                 {/* Game Banner / Cover */}
-                {game.cover ? (
+                {game.cover && (
                     <Image source={game.cover} style={styles.coverImage} resizeMode="cover" />
-                ) : (
-                    <GlassCard style={styles.coverPlaceholder} intensity={20}>
-                        <Text style={styles.coverPlaceholderText}>Game</Text>
-                        <Text style={styles.coverSubText}>Oyun görseli ekle</Text>
-                    </GlassCard>
                 )}
 
                 {/* Info Card */}
@@ -64,6 +59,40 @@ export const GameDetailScreen = () => {
                     <Text style={styles.descTitle}>Hakkında</Text>
                     <Text style={styles.descText}>{game.description}</Text>
                 </GlassCard>
+
+                {/* Video Section */}
+                {game.youtubeId && (
+                    <>
+                        <Text style={styles.sectionLabel}>Video</Text>
+                        <GlassCard style={styles.videoCard} intensity={20}>
+                            <View style={styles.videoContainer}>
+                                <iframe
+                                    width="100%"
+                                    height="100%"
+                                    src={`https://www.youtube.com/embed/${game.youtubeId}`}
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                    style={{ borderRadius: 12 }}
+                                />
+                            </View>
+                        </GlassCard>
+                    </>
+                )}
+
+                {/* Gallery Section */}
+                {game.images && game.images.length > 0 && (
+                    <>
+                        <Text style={styles.sectionLabel}>Gallery</Text>
+                        <View style={styles.galleryGrid}>
+                            {game.images.map((img: any, index: number) => (
+                                <GlassCard key={index} style={styles.galleryCard} intensity={20}>
+                                    <Image source={img} style={styles.galleryImage} resizeMode="cover" />
+                                </GlassCard>
+                            ))}
+                        </View>
+                    </>
+                )}
 
                 {/* Awards */}
                 {game.awards && game.awards.length > 0 && (
@@ -183,6 +212,31 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: colors.textMuted,
         lineHeight: 24,
+    },
+    videoCard: {
+        padding: 0,
+        marginBottom: 16,
+        overflow: 'hidden',
+        backgroundColor: 'rgba(20, 20, 20, 0.4)',
+    },
+    videoContainer: {
+        width: '100%',
+        aspectRatio: 16 / 9,
+        backgroundColor: '#000',
+    },
+    galleryGrid: {
+        flexDirection: 'column',
+        gap: 12,
+        marginBottom: 16,
+    },
+    galleryCard: {
+        padding: 0,
+        overflow: 'hidden',
+        backgroundColor: 'rgba(20, 20, 20, 0.4)',
+    },
+    galleryImage: {
+        width: '100%',
+        height: 200,
     },
     sectionLabel: {
         fontSize: 18,
