@@ -15,23 +15,13 @@ const GAME_PROJECTS = [
         engineIcon: require('../../assets/unity_icon.png'),
         platform: 'Mobile',
         status: 'Published',
-        description: 'Bu proje fikir olarak ortaya konulmuş ancak geliştirme aşamasında sıfır noktasında bulunan bir oyundu.Mekanikleri tasarlanma aşamasındayken ekibe katıldım. Projenin geliştirme kısımını devaralarak çok hızlı bir şekilde bitirdim. Bitirmemizle birlikte bir çok yarışmaya girişimci ruhumuzla lisede başvurduk. Başarılar elde ettik.',
+        description: 'Bu proje fikir olarak ortaya konulmuş ancak geliştirme aşamasında sıfır noktasında bulunan bir oyundu.Mekanikleri tasarlanma aşamasındayken ekibe katıldım. Projenin geliştirme kısımını devaralarak çok hızlı bir şekilde bitirdim. Bitirmemizle birlikte bir çok yarışmaya girişimci ruhumuzla lisede başvurduk. Aynı zamanda yine bu proje ile Abbas Güçlü İle Büyük Oyun Yarışmasına katıldık. Bu yarışmada derece elde edemesek de televizyonda canlı yayın ve stres altında neler yapmalıyız gibi bir çok değerli deneyimler kazandım.',
         cover: null,
         awards: [
             { title: 'Netmarble Game Jam & Incubation Program', event: 'Incube Programında Barış Özistek gibi değerli insanlardan pazarlama ve geliştirme konusunda çok değerli eğitimler aldık. Bu programı 2.likle bitirdik. Çok değerli ödüller aldık.', rank: '2st Place', rankColor: '#ffffffff' },
         ],
     },
-    {
-        id: 'g2',
-        title: 'Shadow Protocol',
-        engine: 'Unity',
-        engineIcon: require('../../assets/unity_icon.png'),
-        platform: 'PC / Mobile',
-        status: 'Prototype',
-        description: 'Stealth-action game with real-time shadows and AI patrol systems.',
-        cover: null,
-        awards: [],
-    },
+
 ];
 
 // ————— Diğer Kategoriler (Örnek) —————

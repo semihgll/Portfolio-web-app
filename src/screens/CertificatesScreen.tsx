@@ -22,10 +22,11 @@ const CERTIFICATES = [
 const EVENTS = [
     {
         id: 1,
-        title: 'ITU Dijifikir Yarışması & Bilişim Teknolojileri Zirvesi',
-        organizer: 'İTÜ',
-        date: '2020',
-        description: 'Bu etkinlikte hem yarışmaya katıldım hem de zirveye katılarak çok önemli bilgiler edindim.',
+        title: 'Global Bodjam',
+        organizer: 'Muğla Sıtkı Koçman Üniversitesi',
+        date: '2023',
+        duration: '48 hours',
+        description: 'Elimizden gelenin en iyisini takım olarak yapmaya çalıştık.',
     },
     {
         id: 2,
@@ -37,11 +38,17 @@ const EVENTS = [
     },
     {
         id: 3,
-        title: 'Global Bodjam',
-        organizer: 'Muğla Sıtkı Koçman Üniversitesi',
-        date: '2023',
-        duration: '48 hours',
-        description: 'Elimizden gelenin en iyisini takım olarak yapmaya çalıştık.',
+        title: 'ITU Dijifikir Yarışması & Bilişim Teknolojileri Zirvesi',
+        organizer: 'İTÜ',
+        date: '2019',
+        description: 'Bu etkinlikte hem yarışmaya katıldım hem de zirveye katılarak çok önemli bilgiler edindim.',
+    },
+    {
+        id: 4,
+        title: 'Dokuz Eylül Game Jam',
+        organizer: 'Dokuz Eylül Üniversitesi',
+        date: '2018',
+        description: 'Bu projede VR ve eğitim odaklı ilerledim. Geliştirici olarak yer aldım projede. Güzel bir etkinlikti.',
     },
 ];
 
