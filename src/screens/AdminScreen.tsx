@@ -4,7 +4,7 @@ import {
     TextInput, Alert, Platform, Modal, Pressable, ActivityIndicator, Image
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { ChevronLeft, Plus, Trash2, Edit3, LogOut, Save, X, ImagePlus } from 'lucide-react-native';
+import { ChevronLeft, Plus, Trash2, Edit3, LogOut, Save, X } from 'lucide-react-native';
 import { colors } from '../theme/colors';
 import { GlassCard } from '../components/GlassCard';
 import { AbstractBackground } from '../components/AbstractBackground';
@@ -419,15 +419,18 @@ export const AdminScreen = () => {
                                 </View>
                             ))}
                             <View style={styles.addImageRow}>
-                                <TextInput
-                                    style={[styles.input, { flex: 1 }]}
-                                    value={newImageUrl}
-                                    onChangeText={setNewImageUrl}
-                                    placeholder="Gorsel URL ekle"
-                                    placeholderTextColor="#555"
-                                />
+                                <View style={{ flex: 1, marginRight: 8 }}>
+                                    <TextInput
+                                        style={styles.input}
+                                        value={newImageUrl}
+                                        onChangeText={setNewImageUrl}
+                                        placeholder="Gorsel URL ekle"
+                                        placeholderTextColor="#555"
+                                        onSubmitEditing={addImageUrl}
+                                    />
+                                </View>
                                 <TouchableOpacity style={styles.addImageBtn} onPress={addImageUrl} activeOpacity={0.7}>
-                                    <ImagePlus color="#fff" size={18} />
+                                    <Plus color="#fff" size={18} />
                                 </TouchableOpacity>
                             </View>
 
@@ -748,7 +751,6 @@ const styles = StyleSheet.create({
     addImageRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 8,
         marginTop: 4,
     },
     addImageBtn: {

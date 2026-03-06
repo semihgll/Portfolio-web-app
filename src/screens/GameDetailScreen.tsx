@@ -81,7 +81,7 @@ export const GameDetailScreen = () => {
                     </>
                 )}
 
-                {/* Gallery Section */}
+                {/* Gallery Section - Local images */}
                 {game.images && game.images.length > 0 && (
                     <>
                         <Text style={styles.sectionLabel}>Gallery</Text>
@@ -92,12 +92,38 @@ export const GameDetailScreen = () => {
                         >
                             {game.images.map((img: any, index: number) => (
                                 <TouchableOpacity
-                                    key={index}
+                                    key={`local-${index}`}
                                     activeOpacity={0.9}
                                     onPress={() => setSelectedImage(img)}
                                 >
                                     <GlassCard style={styles.galleryCard} intensity={20}>
                                         <Image source={img} style={styles.galleryImage} resizeMode="cover" />
+                                    </GlassCard>
+                                </TouchableOpacity>
+                            ))}
+                        </ScrollView>
+                    </>
+                )}
+
+                {/* Gallery Section - URL images from Firestore */}
+                {game.imageUrls && game.imageUrls.length > 0 && (
+                    <>
+                        {!(game.images && game.images.length > 0) && (
+                            <Text style={styles.sectionLabel}>Gallery</Text>
+                        )}
+                        <ScrollView
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            contentContainerStyle={styles.galleryScroll}
+                        >
+                            {game.imageUrls.map((url: string, index: number) => (
+                                <TouchableOpacity
+                                    key={`url-${index}`}
+                                    activeOpacity={0.9}
+                                    onPress={() => setSelectedImage({ uri: url })}
+                                >
+                                    <GlassCard style={styles.galleryCard} intensity={20}>
+                                        <Image source={{ uri: url }} style={styles.galleryImage} resizeMode="cover" />
                                     </GlassCard>
                                 </TouchableOpacity>
                             ))}
@@ -155,10 +181,19 @@ export const GameDetailScreen = () => {
                     </>
                 )}
 
-                {/* Game Banner / Cover (Moved to bottom) */}
+                {/* Game Banner / Cover (local) */}
                 {game.cover && (
                     <Image
                         source={game.cover}
+                        style={[styles.coverImage, { backgroundColor: 'rgba(0,0,0,0.3)' }]}
+                        resizeMode="contain"
+                    />
+                )}
+
+                {/* Cover URL from Firestore */}
+                {!game.cover && game.coverUrl && (
+                    <Image
+                        source={{ uri: game.coverUrl }}
                         style={[styles.coverImage, { backgroundColor: 'rgba(0,0,0,0.3)' }]}
                         resizeMode="contain"
                     />

@@ -1,146 +1,105 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Dimensions, Platform } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Dimensions, Platform, ActivityIndicator } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { ChevronRight, ChevronLeft } from 'lucide-react-native';
 import { colors } from '../theme/colors';
 import { GlassCard } from '../components/GlassCard';
 import { AbstractBackground } from '../components/AbstractBackground';
+import { db } from '../config/firebase';
+import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 
-// ————— Game Dev Projeleri —————
-const GAME_PROJECTS = [
-    {
-        id: 'g1',
-        title: 'Abonetor',
-        engine: 'Unity',
-        engineIcon: require('../../assets/unity_icon.png'),
-        platform: 'Mobile',
-        status: 'Published',
-        description: 'Bu proje fikir olarak ortaya konulmuş ancak geliştirme aşamasında sıfır noktasında bulunan bir oyundu.Mekanikleri tasarlanma aşamasındayken ekibe katıldım. Projenin geliştirme kısımını devaralarak çok hızlı bir şekilde bitirdim. Bitirmemizle birlikte bir çok yarışmaya girişimci ruhumuzla lisede başvurduk. Aynı zamanda yine bu proje ile Abbas Güçlü İle Büyük Oyun Yarışmasına katıldık. Bu yarışmada derece elde edemesek de televizyonda canlı yayın ve stres altında neler yapmalıyız gibi bir çok değerli deneyimler kazandım.',
-        cover: null,
-        youtubeId: '38uq5rJSv84', // Örnek ID, kendi videonun ID'siyle değiştirebilirsin
-        images: [], // Buraya ek görsellerin require() hallerini ekleyebilirsin
-        awards: [
-            { title: 'Netmarble Game Jam & Incubation Program', event: 'Incube Programında Barış Özistek gibi değerli insanlardan pazarlama ve geliştirme konusunda çok değerli eğitimler aldık. Bu programı 2.likle bitirdik. Çok değerli ödüller aldık.', rank: '2st Place', rankColor: '#ffffffff' },
-        ],
-    }, {
-        id: 'g2',
-        title: 'VR Elements',
-        engine: 'Unity',
-        engineIcon: require('../../assets/unity_icon.png'),
-        platform: 'VR, PC',
-        status: 'Game Jam Game',
-        description: 'Bu proje bir game jam projesi ve VR olarak game jam oyunu geliştirmek zor bir tercihdi. Lisede olmam bu konuda heyecanlı olmam sayesinde bu projeyi ekipçe çıkarabildik.',
-        cover: null,
-        youtubeId: 'XnAu-dD7-dg?si=gOp7bKwqrWc5xJCZ', // Örnek ID, kendi videonun ID'siyle değiştirebilirsin
-        images: [], // Buraya ek görsellerin require() hallerini ekleyebilirsin
+// ————— Local asset map (hardcoded görseller için) —————
+const ENGINE_ICONS: Record<string, any> = {
+    'Unity': require('../../assets/unity_icon.png'),
+    'Unreal Engine': require('../../assets/unreal_icon.png'),
+};
 
-    },
-    {
-        id: 'g3',
-        title: 'Cymatics Puzzle!',
-        engine: 'Mobile',
-        engineIcon: require('../../assets/unity_icon.png'),
-        platform: 'Mobile App Store',
-        status: 'Expired',
-        description: 'Bu projede kendimi geliştirmek için daha farklı alanlara yöneldim. 2D piksellerden oluşturulmuş bir görseli Unity içinde okutarak her pikselin dünya üzerinde bir noktaya gelmesini sağladım. Daha sonrasında doğru konumları hafızada tutup random şekilde hareket etmelerini sağladım her bir taneciğin. Önümüzdeki leverlar ile kumların frekanslarını değiştirip doğru konumlarına gelmelerini sağlayan bir sistem yazdım. Bu sistemlerin bir araya gelmesiyle de cymatics fenomeninin simüle edilmesini sağladım.Bu proje daha benim dijital oyun tasarımı bölümüne başlamadan geliştirdiğim projelerden biri.',
-        cover: null,
-        youtubeId: 'hZ9DVCq2h3Y', // Örnek ID, kendi videonun ID'siyle değiştirebilirsin
-        images: [], // Buraya ek görsellerin require() hallerini ekleyebilirsin
+const LOCAL_IMAGES: Record<string, any[]> = {
+    'Astroneer': [require('../../assets/astro_dialog.png'), require('../../assets/astro_env.png'), require('../../assets/astro_menu.png')],
+    'Whisper Woods': [require('../../assets/ww_chase.png'), require('../../assets/ww_esc.png'), require('../../assets/ww_mm.png'), require('../../assets/ww_esc.png'), require('../../assets/ww_text.png')],
+    'Empire Conquest': [require('../../assets/eq_win.png'), require('../../assets/eq_start.png'), require('../../assets/eq_mm.png'), require('../../assets/eq_gp.png'), require('../../assets/eq_game.png')],
+    'Forgotten Inventions': [require('../../assets/fi_gm.png'), require('../../assets/fi_gpz_.png'), require('../../assets/fi_bomb.png'), require('../../assets/fi_mm.png'), require('../../assets/fi_tt.png')],
+    'Ikarus Sculpture': [require('../../assets/icarus.png')],
+};
 
-    },
-    {
-        id: 'g4',
-        title: 'Math Pong',
-        engine: 'Unity',
-        engineIcon: require('../../assets/unity_icon.png'),
-        platform: 'Mobile App Store',
-        status: 'Expired',
-        description: 'Bu projede developer olarak görev aldım. Fizik ile hatalı oluşabilecek her işlemi matematik ile önceden planlayarak o dönemde popüler olan bir oyunun mobil versiyonunu geliştirdim. Bu proje daha benim dijital oyun tasarımı bölümüne başlamadan geliştirdiğim projelerden biri.',
-        youtubeId: 'mAMcvhiDTlc', // Örnek ID, kendi videonun ID'siyle değiştirebilirsin
-        images: [], // Buraya ek görsellerin require() hallerini ekleyebilirsin
+const LOCAL_COVERS: Record<string, any> = {
+    'Forgotten Inventions': require('../../assets/fi_cover.jpg'),
+};
 
-    },
-    {
-        id: 'g5',
-        title: 'Astroneer',
-        engine: 'Unity',
-        engineIcon: require('../../assets/unity_icon.png'),
-        platform: 'PC',
-        status: 'Game Jam Game',
-        description: 'Bu projede developer olarak görev aldım. Dijital tasarımı bölümünde okurken katıldığım ilk game jam projesi. Diyalog sistemi tasarımı bölümünde okurken katıldığım ilk game jam projesi. Kazma mekanikleri harici tüm mekanikleri ben geliştirdim. ',
-        images: [require('../../assets/astro_dialog.png'), require('../../assets/astro_env.png'), require('../../assets/astro_menu.png')],
-    },
-    {
-        id: 'g6',
-        title: 'Whisper Woods',
-        engine: 'Unity',
-        engineIcon: require('../../assets/unity_icon.png'),
-        platform: 'PC',
-        status: 'Student Project',
-        description: 'Bu projede developer, texture artist, foliage designer, environment artist ve tester olarak görev aldım. ',
-        images: [require('../../assets/ww_chase.png'), require('../../assets/ww_esc.png'), require('../../assets/ww_mm.png'), require('../../assets/ww_esc.png'), require('../../assets/ww_text.png')],
-    },
-    {
-        id: 'g7',
-        title: 'Empire Conquest',
-        engine: 'Unity',
-        engineIcon: require('../../assets/unity_icon.png'),
-        platform: 'PC',
-        status: 'Game Jam Game',
-        description: 'Bu projede developer, level design ve game design rollerinde görev aldım. ',
-        images: [require('../../assets/eq_win.png'), require('../../assets/eq_start.png'), require('../../assets/eq_mm.png'), require('../../assets/eq_gp.png'), require('../../assets/eq_game.png')],
-    },
-    {
-        id: 'g8',
-        title: 'Forgotten Inventions',
-        engine: 'Unity',
-        engineIcon: require('../../assets/unity_icon.png'),
-        platform: 'PC',
-        status: 'Student Project',
-        description: 'Bu projede developer ve animator rollerinde görev aldım. ',
-        cover: require('../../assets/fi_cover.jpg'),
-        images: [require('../../assets/fi_gm.png'), require('../../assets/fi_gpz_.png'), require('../../assets/fi_bomb.png'), require('../../assets/fi_mm.png'), require('../../assets/fi_tt.png')],
-    },
-    {
-        id: 'g9',
-        title: 'Pandoras Redemption',
-        engine: 'Unreal Engine',
-        engineIcon: require('../../assets/unreal_icon.png'),
-        platform: 'PC',
-        status: 'Solo Student Project',
-        description: 'Bu projedeki tüm geliştirmeler ve tasarımlar tamamen bana ait. Bu noktada beni en iyi yansıtan oyunlardan bir tanesi de budur. Şu anda geliştirme aşamasında görselleri yüklenecektir.',
-    },
-];
+const LOCAL_AWARDS: Record<string, any[]> = {
+    'Abonetor': [
+        { title: 'Netmarble Game Jam & Incubation Program', event: 'Incube Programında Barış Özistek gibi değerli insanlardan pazarlama ve geliştirme konusunda çok değerli eğitimler aldık. Bu programı 2.likle bitirdik. Çok değerli ödüller aldık.', rank: '2st Place', rankColor: '#ffffffff' },
+    ],
+};
 
-// ————— Diğer Kategoriler (Örnek) —————
-const OTHER_PROJECTS = [
-    {
-        id: 'o1',
-        title: 'Lingua',
-        category: 'Mobile App',
-        description: 'React Native ve expo kullanarak geliştirdiğim bir dil öğrenme uygulaması.',
-        status: 'Staj Projesi',
-        platform: 'IOS',
-        youtubeId: 'b9PZwSgQXBI',
-    },
-    {
-        id: 'o2',
-        title: 'Ikarus Sculpture',
-        category: '3D Art',
-        description: 'Bu benim bitirme oyunu için yaptığım çevre elementlerinden birisi. İkarusun düşmeye hemen başlamadan önceki halini Blender ile sculpt yaptım ve Substance Painter ile kaplamasını yaptım.',
-        status: 'Bitirme Projesi',
-        platform: 'Blender & Substance Painter',
-        images: [require('../../assets/icarus.png')],
-
-    },
-];
+interface FirestoreProject {
+    id: string;
+    title: string;
+    category: string;
+    description: string;
+    status?: string;
+    platform?: string;
+    engine?: string;
+    youtubeId?: string;
+    order?: number;
+    coverUrl?: string;
+    imageUrls?: string[];
+}
 
 export const ProjectsScreen = () => {
     const route = useRoute<any>();
     const navigation = useNavigation<any>();
     const filterCat = route.params?.filter || null;
+    const [projects, setProjects] = useState<FirestoreProject[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        fetchProjects();
+    }, []);
+
+    const fetchProjects = async () => {
+        try {
+            const q = query(collection(db, 'projects'), orderBy('order', 'asc'));
+            const snapshot = await getDocs(q);
+            const data = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            })) as FirestoreProject[];
+            setProjects(data);
+        } catch (error) {
+            console.error('Failed to fetch projects:', error);
+        }
+        setLoading(false);
+    };
 
     const isGameDev = filterCat === 'Game Dev';
+
+    // Filter projects by category
+    const filteredProjects = filterCat
+        ? projects.filter(p => p.category === filterCat)
+        : projects;
+
+    // Enrich project with local assets for navigation
+    const enrichProject = (project: FirestoreProject) => {
+        const enriched: any = { ...project };
+        // Add engine icon
+        if (project.engine && ENGINE_ICONS[project.engine]) {
+            enriched.engineIcon = ENGINE_ICONS[project.engine];
+        }
+        // Add local images if no Firestore imageUrls
+        if ((!project.imageUrls || project.imageUrls.length === 0) && LOCAL_IMAGES[project.title]) {
+            enriched.images = LOCAL_IMAGES[project.title];
+        }
+        // Add local cover
+        if (!project.coverUrl && LOCAL_COVERS[project.title]) {
+            enriched.cover = LOCAL_COVERS[project.title];
+        }
+        // Add awards
+        if (LOCAL_AWARDS[project.title]) {
+            enriched.awards = LOCAL_AWARDS[project.title];
+        }
+        return enriched;
+    };
 
     return (
         <View style={styles.container}>
@@ -159,48 +118,58 @@ export const ProjectsScreen = () => {
                     </View>
                 </View>
 
-                {/* ——— GAME DEV: Özel Liste ——— */}
-                {isGameDev && GAME_PROJECTS.map((game) => (
-                    <TouchableOpacity
-                        key={game.id}
-                        activeOpacity={0.8}
-                        onPress={() => navigation.navigate('GameDetail', { game })}
-                    >
-                        <GlassCard style={styles.gameCard} intensity={20}>
-                            {/* Removed Cover Image block based on user request */}                            <View style={styles.gameCardContent}>
-                                <View style={styles.gameInfo}>
-                                    <Text style={styles.gameTitle}>{game.title}</Text>
-                                    <View style={styles.engineRow}>
-                                        {game.engineIcon && (
-                                            <Image
-                                                source={game.engineIcon}
-                                                style={styles.engineIconSmall}
-                                                resizeMode="contain"
-                                            />
+                {/* Loading */}
+                {loading && (
+                    <View style={{ padding: 40, alignItems: 'center' }}>
+                        <ActivityIndicator size="large" color={colors.primary} />
+                    </View>
+                )}
+
+                {/* Game Dev projects */}
+                {isGameDev && filteredProjects.map((project) => {
+                    const enriched = enrichProject(project);
+                    return (
+                        <TouchableOpacity
+                            key={project.id}
+                            activeOpacity={0.8}
+                            onPress={() => navigation.navigate('GameDetail', { game: enriched })}
+                        >
+                            <GlassCard style={styles.gameCard} intensity={20}>
+                                <View style={styles.gameCardContent}>
+                                    <View style={styles.gameInfo}>
+                                        <Text style={styles.gameTitle}>{project.title}</Text>
+                                        <View style={styles.engineRow}>
+                                            {enriched.engineIcon && (
+                                                <Image
+                                                    source={enriched.engineIcon}
+                                                    style={styles.engineIconSmall}
+                                                    resizeMode="contain"
+                                                />
+                                            )}
+                                            {project.engine && (
+                                                <Text style={styles.gameEngine}>{project.engine}</Text>
+                                            )}
+                                        </View>
+                                        {project.status && (
+                                            <Text style={styles.gameStatus}>{project.status}</Text>
                                         )}
-                                        <Text style={styles.gameEngine}>{game.engine}</Text>
                                     </View>
-                                    <Text style={styles.gameStatus}>{game.status}</Text>
+                                    {enriched.engineIcon && !enriched.cover && !(enriched.images && enriched.images.length > 0) && !(project.imageUrls && project.imageUrls.length > 0) && (
+                                        <Image
+                                            source={enriched.engineIcon}
+                                            style={styles.engineIcon}
+                                            resizeMode="contain"
+                                        />
+                                    )}
                                 </View>
-                                {!(game.cover || (game.images && game.images.length > 0)) && game.engineIcon && (
-                                    <Image
-                                        source={game.engineIcon}
-                                        style={styles.engineIcon}
-                                        resizeMode="contain"
-                                    />
-                                )}
-                            </View>
-                        </GlassCard>
-                    </TouchableOpacity>
-                ))}
+                            </GlassCard>
+                        </TouchableOpacity>
+                    );
+                })}
 
-                {/* ——— DİĞER KATEGORİLER: Standart Liste ——— */}
+                {/* Other categories */}
                 {!isGameDev && (() => {
-                    const filtered = filterCat
-                        ? OTHER_PROJECTS.filter(p => p.category === filterCat)
-                        : OTHER_PROJECTS;
-
-                    if (filtered.length === 0) {
+                    if (!loading && filteredProjects.length === 0) {
                         return (
                             <GlassCard style={styles.projectCard} intensity={20}>
                                 <Text style={styles.projectName}>Coming Soon...</Text>
@@ -209,22 +178,25 @@ export const ProjectsScreen = () => {
                         );
                     }
 
-                    return filtered.map((project) => (
-                        <TouchableOpacity
-                            key={project.id}
-                            activeOpacity={0.8}
-                            onPress={() => navigation.navigate('GameDetail', { game: project })}
-                        >
-                            <GlassCard style={styles.projectCard} intensity={20}>
-                                <Text style={styles.projectName}>{project.title}</Text>
-                                <Text style={styles.projectDesc}>{project.description}</Text>
-                                <View style={styles.cardFooter}>
-                                    <Text style={styles.viewDetails}>View Details</Text>
-                                    <ChevronRight color={colors.primary} size={16} />
-                                </View>
-                            </GlassCard>
-                        </TouchableOpacity>
-                    ));
+                    return filteredProjects.map((project) => {
+                        const enriched = enrichProject(project);
+                        return (
+                            <TouchableOpacity
+                                key={project.id}
+                                activeOpacity={0.8}
+                                onPress={() => navigation.navigate('GameDetail', { game: enriched })}
+                            >
+                                <GlassCard style={styles.projectCard} intensity={20}>
+                                    <Text style={styles.projectName}>{project.title}</Text>
+                                    <Text style={styles.projectDesc}>{project.description}</Text>
+                                    <View style={styles.cardFooter}>
+                                        <Text style={styles.viewDetails}>View Details</Text>
+                                        <ChevronRight color={colors.primary} size={16} />
+                                    </View>
+                                </GlassCard>
+                            </TouchableOpacity>
+                        );
+                    });
                 })()}
 
                 <View style={{ height: 120 }} />
@@ -309,12 +281,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 4,
-    },
-    gamePreview: {
-        width: '100%',
-        height: Dimensions.get('window').height * 0.7,
-        borderRadius: 12,
-        marginBottom: 12,
     },
 
     // Standard project card
