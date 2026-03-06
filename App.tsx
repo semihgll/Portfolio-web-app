@@ -14,6 +14,8 @@ import { GameDetailScreen } from './src/screens/GameDetailScreen';
 import { AboutScreen } from './src/screens/AboutScreen';
 import { CertificatesScreen } from './src/screens/CertificatesScreen';
 import { ContactScreen } from './src/screens/ContactScreen';
+import { AdminScreen } from './src/screens/AdminScreen';
+import { AuthProvider } from './src/context/AuthContext';
 import { colors } from './src/theme/colors';
 
 const Tab = createBottomTabNavigator();
@@ -85,18 +87,24 @@ function TabNavigator() {
   );
 }
 
+// Senin admin Google email adresin — bunu kendi emailinle değiştir
+const ADMIN_EMAIL = 'semihgul258@gmail.com';
+
 export default function App() {
   return (
-    <SafeAreaProvider>
-      <StatusBar style="light" />
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="MainTabs" component={TabNavigator} />
-          <Stack.Screen name="Projects" component={ProjectsScreen} />
-          <Stack.Screen name="GameDetail" component={GameDetailScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </SafeAreaProvider>
+    <AuthProvider adminEmail={ADMIN_EMAIL}>
+      <SafeAreaProvider>
+        <StatusBar style="light" />
+        <NavigationContainer>
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="MainTabs" component={TabNavigator} />
+            <Stack.Screen name="Projects" component={ProjectsScreen} />
+            <Stack.Screen name="GameDetail" component={GameDetailScreen} />
+            <Stack.Screen name="Admin" component={AdminScreen} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </AuthProvider>
   );
 }
 

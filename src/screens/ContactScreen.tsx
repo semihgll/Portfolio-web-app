@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Github, Linkedin, Mail, Twitter } from 'lucide-react-native';
 import { colors } from '../theme/colors';
@@ -7,6 +8,7 @@ import { GlassCard } from '../components/GlassCard';
 import { AbstractBackground } from '../components/AbstractBackground';
 
 export const ContactScreen = () => {
+    const navigation = useNavigation<any>();
     return (
         <View style={styles.container}>
             <AbstractBackground />
@@ -24,7 +26,12 @@ export const ContactScreen = () => {
                 </GlassCard>
 
                 <View style={styles.footer}>
-                    <Text style={styles.footerText}>Designed & Built with Expo + React Native</Text>
+                    <TouchableOpacity
+                        activeOpacity={0.7}
+                        onPress={() => navigation.navigate('Admin')}
+                    >
+                        <Text style={styles.footerText}>Designed & Built with Expo + React Native</Text>
+                    </TouchableOpacity>
                 </View>
 
             </View>

@@ -25,16 +25,6 @@ export const AboutScreen = () => {
                         My diverse background allows me to approach problems from unique angles, blending logical programming patterns with creative design thinking.
                     </Text>
                 </GlassCard>
-
-                <Text style={styles.sectionTitle}>Tech Stack</Text>
-
-                <View style={styles.stackGrid}>
-                    <StackItem icon={<Terminal color={colors.primary} size={24} />} name="Unreal C++" />
-                    <StackItem icon={<Code color={colors.primary} size={24} />} name="React Native" />
-                    <StackItem icon={<Layers color={colors.primary} size={24} />} name="Blender 3D" />
-                    <StackItem icon={<MessageSquare color={colors.primary} size={24} />} name="Creative Writing" />
-                </View>
-
                 <View style={{ height: 120 }} />
             </ScrollView>
         </View>

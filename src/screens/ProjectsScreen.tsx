@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Dimensions, Platform } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { ChevronRight, ChevronLeft } from 'lucide-react-native';
 import { colors } from '../theme/colors';
@@ -118,7 +118,20 @@ const OTHER_PROJECTS = [
         id: 'o1',
         title: 'Lingua',
         category: 'Mobile App',
-        description: 'React Native productivity app with gamified tasks and habit tracking.',
+        description: 'React Native ve expo kullanarak geliştirdiğim bir dil öğrenme uygulaması.',
+        status: 'Staj Projesi',
+        platform: 'IOS',
+        youtubeId: 'b9PZwSgQXBI',
+    },
+    {
+        id: 'o2',
+        title: 'Ikarus Sculpture',
+        category: '3D Art',
+        description: 'Bu benim bitirme oyunu için yaptığım çevre elementlerinden birisi. İkarusun düşmeye hemen başlamadan önceki halini Blender ile sculpt yaptım ve Substance Painter ile kaplamasını yaptım.',
+        status: 'Bitirme Projesi',
+        platform: 'Blender & Substance Painter',
+        images: [require('../../assets/icarus.png')],
+
     },
 ];
 
@@ -197,7 +210,11 @@ export const ProjectsScreen = () => {
                     }
 
                     return filtered.map((project) => (
-                        <TouchableOpacity key={project.id} activeOpacity={0.8}>
+                        <TouchableOpacity
+                            key={project.id}
+                            activeOpacity={0.8}
+                            onPress={() => navigation.navigate('GameDetail', { game: project })}
+                        >
                             <GlassCard style={styles.projectCard} intensity={20}>
                                 <Text style={styles.projectName}>{project.title}</Text>
                                 <Text style={styles.projectDesc}>{project.description}</Text>

@@ -35,11 +35,15 @@ export const GameDetailScreen = () => {
                 {/* Top Banner moved to bottom */}
                 {/* Info Card */}
                 <GlassCard style={styles.infoCard} intensity={20}>
-                    <View style={styles.infoRow}>
-                        <Text style={styles.infoLabel}>Motor</Text>
-                        <Text style={styles.infoValue}>{game.engine || '—'}</Text>
-                    </View>
-                    <View style={styles.divider} />
+                    {game.engine && (
+                        <>
+                            <View style={styles.infoRow}>
+                                <Text style={styles.infoLabel}>Motor</Text>
+                                <Text style={styles.infoValue}>{game.engine}</Text>
+                            </View>
+                            <View style={styles.divider} />
+                        </>
+                    )}
                     <View style={styles.infoRow}>
                         <Text style={styles.infoLabel}>Platform</Text>
                         <Text style={styles.infoValue}>{game.platform || '—'}</Text>
