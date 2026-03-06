@@ -1,18 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     View, Text, StyleSheet, ScrollView, TouchableOpacity,
     TextInput, Alert, Platform, Modal, Pressable, ActivityIndicator, Image
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { ChevronLeft, Plus, Trash2, Edit3, LogOut, Save, X } from 'lucide-react-native';
+import { ChevronLeft, Plus, Trash2, Edit3, LogOut, Save, X, Upload } from 'lucide-react-native';
 import { colors } from '../theme/colors';
 import { GlassCard } from '../components/GlassCard';
 import { AbstractBackground } from '../components/AbstractBackground';
 import { useAuth } from '../context/AuthContext';
-import { db } from '../config/firebase';
+import { db, storage } from '../config/firebase';
 import {
     collection, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, query
 } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 interface Project {
     id?: string;
@@ -51,6 +52,9 @@ export const AdminScreen = () => {
     const [editingProject, setEditingProject] = useState<Project | null>(null);
     const [formData, setFormData] = useState<Project>(EMPTY_PROJECT);
     const [newImageUrl, setNewImageUrl] = useState('');
+    const [uploading, setUploading] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const coverInputRef = useRef<HTMLInputElement | null>(null);
 
     useEffect(() => {
         if (isAdmin) {
@@ -101,6 +105,44 @@ export const AdminScreen = () => {
         const updated = [...(formData.imageUrls || [])];
         updated.splice(index, 1);
         setFormData({ ...formData, imageUrls: updated });
+    };
+
+    const uploadImageFile = async (file: File, type: 'gallery' | 'cover') => {
+        setUploading(true);
+        try {
+            const timestamp = Date.now();
+            const safeName = file.name.replace(/[^a-zA-Z0-9.]/g, '_');
+            const storageRef = ref(storage, `projects/${timestamp}_${safeName}`);
+            await uploadBytes(storageRef, file);
+            const downloadUrl = await getDownloadURL(storageRef);
+
+            if (type === 'cover') {
+                setFormData(prev => ({ ...prev, coverUrl: downloadUrl }));
+            } else {
+                setFormData(prev => ({
+                    ...prev,
+                    imageUrls: [...(prev.imageUrls || []), downloadUrl]
+                }));
+            }
+        } catch (error) {
+            console.error('Upload error:', error);
+            if (Platform.OS === 'web') {
+                window.alert('Yukleme hatasi: ' + error);
+            }
+        }
+        setUploading(false);
+    };
+
+    const pickGalleryImage = () => {
+        if (Platform.OS === 'web' && fileInputRef.current) {
+            fileInputRef.current.click();
+        }
+    };
+
+    const pickCoverImage = () => {
+        if (Platform.OS === 'web' && coverInputRef.current) {
+            coverInputRef.current.click();
+        }
     };
 
     const saveProject = async () => {
@@ -387,14 +429,21 @@ export const AdminScreen = () => {
                                 placeholderTextColor="#555"
                             />
 
-                            <Text style={styles.label}>Kapak Gorseli URL (opsiyonel)</Text>
-                            <TextInput
-                                style={styles.input}
-                                value={formData.coverUrl}
-                                onChangeText={(t) => setFormData({ ...formData, coverUrl: t })}
-                                placeholder="https://example.com/cover.jpg"
-                                placeholderTextColor="#555"
-                            />
+                            <Text style={styles.label}>Kapak Gorseli</Text>
+                            <View style={styles.addImageRow}>
+                                <View style={{ flex: 1, marginRight: 8 }}>
+                                    <TextInput
+                                        style={styles.input}
+                                        value={formData.coverUrl}
+                                        onChangeText={(t) => setFormData({ ...formData, coverUrl: t })}
+                                        placeholder="URL yapistir veya dosya yukle"
+                                        placeholderTextColor="#555"
+                                    />
+                                </View>
+                                <TouchableOpacity style={styles.addImageBtn} onPress={pickCoverImage} activeOpacity={0.7}>
+                                    <Upload color="#fff" size={18} />
+                                </TouchableOpacity>
+                            </View>
                             {formData.coverUrl ? (
                                 <Image
                                     source={{ uri: formData.coverUrl }}
@@ -403,8 +452,42 @@ export const AdminScreen = () => {
                                 />
                             ) : null}
 
+                            {/* Hidden file inputs for web */}
+                            {Platform.OS === 'web' && (
+                                <View style={{ height: 0, overflow: 'hidden' }}>
+                                    <input
+                                        ref={coverInputRef as any}
+                                        type="file"
+                                        accept="image/*"
+                                        style={{ display: 'none' }}
+                                        onChange={(e: any) => {
+                                            const file = e.target?.files?.[0];
+                                            if (file) uploadImageFile(file, 'cover');
+                                            e.target.value = '';
+                                        }}
+                                    />
+                                    <input
+                                        ref={fileInputRef as any}
+                                        type="file"
+                                        accept="image/*"
+                                        style={{ display: 'none' }}
+                                        onChange={(e: any) => {
+                                            const file = e.target?.files?.[0];
+                                            if (file) uploadImageFile(file, 'gallery');
+                                            e.target.value = '';
+                                        }}
+                                    />
+                                </View>
+                            )}
+
                             {/* Image URLs Section */}
                             <Text style={styles.label}>Galeri Gorselleri</Text>
+                            {uploading && (
+                                <View style={{ padding: 12, alignItems: 'center' }}>
+                                    <ActivityIndicator size="small" color="#fff" />
+                                    <Text style={{ color: '#888', fontSize: 12, marginTop: 4 }}>Yukleniyor...</Text>
+                                </View>
+                            )}
                             {(formData.imageUrls || []).map((url, index) => (
                                 <View key={index} style={styles.imageUrlRow}>
                                     <Image
@@ -424,13 +507,16 @@ export const AdminScreen = () => {
                                         style={styles.input}
                                         value={newImageUrl}
                                         onChangeText={setNewImageUrl}
-                                        placeholder="Gorsel URL ekle"
+                                        placeholder="URL yapistir"
                                         placeholderTextColor="#555"
                                         onSubmitEditing={addImageUrl}
                                     />
                                 </View>
                                 <TouchableOpacity style={styles.addImageBtn} onPress={addImageUrl} activeOpacity={0.7}>
                                     <Plus color="#fff" size={18} />
+                                </TouchableOpacity>
+                                <TouchableOpacity style={[styles.addImageBtn, { marginLeft: 8 }]} onPress={pickGalleryImage} activeOpacity={0.7}>
+                                    <Upload color="#fff" size={18} />
                                 </TouchableOpacity>
                             </View>
 
