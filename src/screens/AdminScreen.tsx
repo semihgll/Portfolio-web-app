@@ -9,11 +9,12 @@ import { colors } from '../theme/colors';
 import { GlassCard } from '../components/GlassCard';
 import { AbstractBackground } from '../components/AbstractBackground';
 import { useAuth } from '../context/AuthContext';
-import { db, storage } from '../config/firebase';
+import { db } from '../config/firebase';
 import {
     collection, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, query
 } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+
+const IMGBB_API_KEY = 'a6eea151b42baaf26acfda0926f9afff';
 
 interface Project {
     id?: string;
@@ -110,11 +111,31 @@ export const AdminScreen = () => {
     const uploadImageFile = async (file: File, type: 'gallery' | 'cover') => {
         setUploading(true);
         try {
-            const timestamp = Date.now();
-            const safeName = file.name.replace(/[^a-zA-Z0-9.]/g, '_');
-            const storageRef = ref(storage, `projects/${timestamp}_${safeName}`);
-            await uploadBytes(storageRef, file);
-            const downloadUrl = await getDownloadURL(storageRef);
+            console.log('Uploading file:', file.name, file.size, file.type);
+
+            // Upload to imgbb
+            const formPayload = new FormData();
+            formPayload.append('key', IMGBB_API_KEY);
+            formPayload.append('image', file);
+            formPayload.append('name', `portfolio_${Date.now()}`);
+
+            const response = await fetch('https://api.imgbb.com/1/upload', {
+                method: 'POST',
+                body: formPayload,
+                headers: {
+                    Accept: 'application/json',
+                },
+            });
+
+            const data = await response.json();
+            console.log('ImgBB Response:', data);
+
+            if (!data.success) {
+                throw new Error(data.error?.message || 'Upload failed');
+            }
+
+            const downloadUrl = data.data.url;
+            console.log('Success! URL:', downloadUrl);
 
             if (type === 'cover') {
                 setFormData(prev => ({ ...prev, coverUrl: downloadUrl }));
@@ -124,13 +145,14 @@ export const AdminScreen = () => {
                     imageUrls: [...(prev.imageUrls || []), downloadUrl]
                 }));
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Upload error:', error);
             if (Platform.OS === 'web') {
-                window.alert('Yukleme hatasi: ' + error);
+                window.alert('Yukleme hatasi: ' + (error.message || error.toString()));
             }
+        } finally {
+            setUploading(false);
         }
-        setUploading(false);
     };
 
     const pickGalleryImage = () => {
@@ -393,16 +415,20 @@ export const AdminScreen = () => {
                                 numberOfLines={4}
                             />
 
-                            <Text style={styles.label}>Motor (opsiyonel)</Text>
-                            <TextInput
-                                style={styles.input}
-                                value={formData.engine}
-                                onChangeText={(t) => setFormData({ ...formData, engine: t })}
-                                placeholder="Unity, Unreal Engine, vb."
-                                placeholderTextColor="#555"
-                            />
+                            {formData.category === 'Game Dev' && (
+                                <>
+                                    <Text style={styles.label}>Motor (opsiyonel)</Text>
+                                    <TextInput
+                                        style={styles.input}
+                                        value={formData.engine}
+                                        onChangeText={(t) => setFormData({ ...formData, engine: t })}
+                                        placeholder="Unity, Unreal Engine, vb."
+                                        placeholderTextColor="#555"
+                                    />
+                                </>
+                            )}
 
-                            <Text style={styles.label}>Platform</Text>
+                            <Text style={styles.label}>Platform (opsiyonel)</Text>
                             <TextInput
                                 style={styles.input}
                                 value={formData.platform}
@@ -411,14 +437,18 @@ export const AdminScreen = () => {
                                 placeholderTextColor="#555"
                             />
 
-                            <Text style={styles.label}>Durum</Text>
-                            <TextInput
-                                style={styles.input}
-                                value={formData.status}
-                                onChangeText={(t) => setFormData({ ...formData, status: t })}
-                                placeholder="Published, Game Jam, Student Project, vb."
-                                placeholderTextColor="#555"
-                            />
+                            {formData.category === 'Game Dev' && (
+                                <>
+                                    <Text style={styles.label}>Durum (opsiyonel)</Text>
+                                    <TextInput
+                                        style={styles.input}
+                                        value={formData.status}
+                                        onChangeText={(t) => setFormData({ ...formData, status: t })}
+                                        placeholder="Published, Game Jam, Student Project, vb."
+                                        placeholderTextColor="#555"
+                                    />
+                                </>
+                            )}
 
                             <Text style={styles.label}>YouTube Video ID (opsiyonel)</Text>
                             <TextInput

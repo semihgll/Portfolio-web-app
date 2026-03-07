@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Linking, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Github, Linkedin, Mail, Twitter } from 'lucide-react-native';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { colors } from '../theme/colors';
 import { GlassCard } from '../components/GlassCard';
 import { AbstractBackground } from '../components/AbstractBackground';
@@ -20,9 +21,10 @@ export const ContactScreen = () => {
                 </View>
 
                 <GlassCard style={styles.card} intensity={25}>
-                    <SocialButton icon={<Mail color={colors.text} size={24} />} title="semihgll@icloud.com" />
-                    {/*<SocialButton icon={<Github color={colors.text} size={24} />} title="github.com/creator" />*/}
-                    <SocialButton icon={<Linkedin color={colors.text} size={24} />} title="linkedin.com/in/semihgul" />
+                    <SocialButton icon={<Mail color={colors.text} size={24} />} title="semihgll@icloud.com" url="mailto:semihgll@icloud.com" />
+                    {/*<SocialButton icon={<Github color={colors.text} size={24} />} title="github.com/creator" url="https://github.com/creator" />*/}
+                    <SocialButton icon={<Linkedin color={colors.text} size={24} />} title="Linkedin" url="https://linkedin.com/in/semih-gul" />
+                    <SocialButton icon={<FontAwesome5 name="artstation" color={colors.text} size={24} />} title="Artstation" url="https://artstation.com/semihgul" />
                 </GlassCard>
 
                 <View style={styles.footer}>
@@ -39,12 +41,29 @@ export const ContactScreen = () => {
     );
 };
 
-const SocialButton = ({ icon, title }: any) => (
-    <TouchableOpacity style={styles.socialButton} activeOpacity={0.7}>
-        <View style={styles.iconBox}>{icon}</View>
-        <Text style={styles.socialText}>{title}</Text>
-    </TouchableOpacity>
-);
+const SocialButton = ({ icon, title, url }: any) => {
+    const handlePress = async () => {
+        if (url) {
+            try {
+                const supported = await Linking.canOpenURL(url);
+                if (supported) {
+                    await Linking.openURL(url);
+                } else {
+                    Alert.alert(`Bağlantı açılamıyor`, `URL: ${url}`);
+                }
+            } catch (error) {
+                console.error("An error occurred", error);
+            }
+        }
+    };
+
+    return (
+        <TouchableOpacity style={styles.socialButton} activeOpacity={0.7} onPress={handlePress}>
+            <View style={styles.iconBox}>{icon}</View>
+            <Text style={styles.socialText}>{title}</Text>
+        </TouchableOpacity>
+    );
+};
 
 const styles = StyleSheet.create({
     container: {

@@ -125,79 +125,71 @@ export const ProjectsScreen = () => {
                     </View>
                 )}
 
-                {/* Game Dev projects */}
-                {isGameDev && filteredProjects.map((project) => {
-                    const enriched = enrichProject(project);
-                    return (
-                        <TouchableOpacity
-                            key={project.id}
-                            activeOpacity={0.8}
-                            onPress={() => navigation.navigate('GameDetail', { game: enriched })}
-                        >
-                            <GlassCard style={styles.gameCard} intensity={20}>
-                                <View style={styles.gameCardContent}>
-                                    <View style={styles.gameInfo}>
-                                        <Text style={styles.gameTitle}>{project.title}</Text>
-                                        <View style={styles.engineRow}>
-                                            {enriched.engineIcon && (
+                {/* Empty State */}
+                {!loading && filteredProjects.length === 0 && (
+                    <GlassCard style={styles.projectCard} intensity={20}>
+                        <Text style={styles.projectName}>Coming Soon...</Text>
+                        <Text style={styles.projectDesc}>I'll be adding my {filterCat} works here very soon.</Text>
+                    </GlassCard>
+                )}
+
+                {/* Projects Grid */}
+                {filteredProjects.length > 0 && (
+                    <View style={styles.gameGrid}>
+                        {filteredProjects.map((project) => {
+                            const enriched = enrichProject(project);
+                            return (
+                                <TouchableOpacity
+                                    key={project.id}
+                                    activeOpacity={0.8}
+                                    style={styles.gameCardWrapper}
+                                    onPress={() => navigation.navigate('GameDetail', { game: enriched })}
+                                >
+                                    <GlassCard style={styles.gameCard} intensity={20}>
+                                        <View style={styles.gameCoverContainer}>
+                                            {(enriched.cover || project.coverUrl) ? (
                                                 <Image
-                                                    source={enriched.engineIcon}
-                                                    style={styles.engineIconSmall}
-                                                    resizeMode="contain"
+                                                    source={enriched.cover ? enriched.cover : { uri: project.coverUrl }}
+                                                    style={styles.gameCoverImage}
+                                                    resizeMode="cover"
                                                 />
-                                            )}
-                                            {project.engine && (
-                                                <Text style={styles.gameEngine}>{project.engine}</Text>
+                                            ) : (
+                                                <View style={styles.gameCoverPlaceholder}>
+                                                    {enriched.engineIcon ? (
+                                                        <Image
+                                                            source={enriched.engineIcon}
+                                                            style={styles.engineIcon}
+                                                            resizeMode="contain"
+                                                        />
+                                                    ) : (
+                                                        <Text style={{ color: '#555', fontSize: 12 }}>{project.category}</Text>
+                                                    )}
+                                                </View>
                                             )}
                                         </View>
-                                        {project.status && (
-                                            <Text style={styles.gameStatus}>{project.status}</Text>
-                                        )}
-                                    </View>
-                                    {enriched.engineIcon && !enriched.cover && !(enriched.images && enriched.images.length > 0) && !(project.imageUrls && project.imageUrls.length > 0) && (
-                                        <Image
-                                            source={enriched.engineIcon}
-                                            style={styles.engineIcon}
-                                            resizeMode="contain"
-                                        />
-                                    )}
-                                </View>
-                            </GlassCard>
-                        </TouchableOpacity>
-                    );
-                })}
-
-                {/* Other categories */}
-                {!isGameDev && (() => {
-                    if (!loading && filteredProjects.length === 0) {
-                        return (
-                            <GlassCard style={styles.projectCard} intensity={20}>
-                                <Text style={styles.projectName}>Coming Soon...</Text>
-                                <Text style={styles.projectDesc}>I'll be adding my {filterCat} works here very soon.</Text>
-                            </GlassCard>
-                        );
-                    }
-
-                    return filteredProjects.map((project) => {
-                        const enriched = enrichProject(project);
-                        return (
-                            <TouchableOpacity
-                                key={project.id}
-                                activeOpacity={0.8}
-                                onPress={() => navigation.navigate('GameDetail', { game: enriched })}
-                            >
-                                <GlassCard style={styles.projectCard} intensity={20}>
-                                    <Text style={styles.projectName}>{project.title}</Text>
-                                    <Text style={styles.projectDesc}>{project.description}</Text>
-                                    <View style={styles.cardFooter}>
-                                        <Text style={styles.viewDetails}>View Details</Text>
-                                        <ChevronRight color={colors.primary} size={16} />
-                                    </View>
-                                </GlassCard>
-                            </TouchableOpacity>
-                        );
-                    });
-                })()}
+                                        <View style={styles.gameInfo}>
+                                            <Text style={styles.gameTitle} numberOfLines={1}>{project.title}</Text>
+                                            {(enriched.engineIcon || project.engine) && (
+                                                <View style={styles.engineRow}>
+                                                    {enriched.engineIcon && (
+                                                        <Image
+                                                            source={enriched.engineIcon}
+                                                            style={styles.engineIconSmall}
+                                                            resizeMode="contain"
+                                                        />
+                                                    )}
+                                                    {project.engine && (
+                                                        <Text style={styles.gameEngine} numberOfLines={1}>{project.engine}</Text>
+                                                    )}
+                                                </View>
+                                            )}
+                                        </View>
+                                    </GlassCard>
+                                </TouchableOpacity>
+                            );
+                        })}
+                    </View>
+                )}
 
                 <View style={{ height: 120 }} />
             </ScrollView>
@@ -235,52 +227,64 @@ const styles = StyleSheet.create({
     },
 
     // Game Dev Card
-    gameCard: {
-        padding: 18,
-        marginBottom: 14,
-        backgroundColor: 'rgba(20, 20, 20, 0.4)',
-    },
-    gameCardContent: {
+    gameGrid: {
         flexDirection: 'row',
+        flexWrap: 'wrap',
         justifyContent: 'space-between',
+    },
+    gameCardWrapper: {
+        width: '31%',
+        marginBottom: 16,
+    },
+    gameCard: {
+        padding: 0,
+        backgroundColor: 'rgba(20, 20, 20, 0.4)',
+        overflow: 'hidden',
+    },
+    gameCoverContainer: {
+        width: '100%',
+        aspectRatio: 1, // Kare veya istediğiniz oran
+        backgroundColor: 'rgba(0,0,0,0.3)',
+    },
+    gameCoverImage: {
+        width: '100%',
+        height: '100%',
+    },
+    gameCoverPlaceholder: {
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
         alignItems: 'center',
     },
     gameInfo: {
-        flex: 1,
-        marginRight: 16,
+        padding: 12,
     },
     gameTitle: {
-        fontSize: 20,
+        fontSize: 16,
         fontWeight: '700',
         color: colors.text,
         marginBottom: 4,
     },
     gameEngine: {
-        fontSize: 13,
+        fontSize: 12,
         color: colors.primary,
         fontWeight: '600',
-        marginBottom: 4,
-    },
-    gameStatus: {
-        fontSize: 12,
-        color: colors.textMuted,
     },
     engineIcon: {
-        width: 44,
-        height: 44,
+        width: 32,
+        height: 32,
         tintColor: colors.text,
         opacity: 0.8,
     },
     engineIconSmall: {
-        width: 16,
-        height: 16,
+        width: 14,
+        height: 14,
         tintColor: colors.primary,
         marginRight: 6,
     },
     engineRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 4,
     },
 
     // Standard project card
