@@ -5,6 +5,7 @@ import { ChevronLeft, X } from 'lucide-react-native';
 import { colors } from '../theme/colors';
 import { GlassCard } from '../components/GlassCard';
 import { AbstractBackground } from '../components/AbstractBackground';
+import ProfessionalVideoPlayer from '../components/ProfessionalVideoPlayer';
 
 export const GameDetailScreen = () => {
     const route = useRoute<any>();
@@ -62,20 +63,27 @@ export const GameDetailScreen = () => {
                 </GlassCard>
 
                 {/* Video Section */}
-                {game.youtubeId && (
+                {(game.video || game.videoUrl || game.youtubeId) && (
                     <>
                         <Text style={styles.sectionLabel}>Video</Text>
                         <GlassCard style={styles.videoCard} intensity={20}>
                             <View style={styles.videoContainer}>
-                                <iframe
-                                    width="100%"
-                                    height="100%"
-                                    src={`https://www.youtube.com/embed/${game.youtubeId}`}
-                                    frameBorder="0"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowFullScreen
-                                    style={{ borderRadius: 12 }}
-                                />
+                                {game.video || game.videoUrl ? (
+                                    <ProfessionalVideoPlayer
+                                        source={game.video || game.videoUrl}
+                                        style={{ borderRadius: 12 }}
+                                    />
+                                ) : (
+                                    <iframe
+                                        width="100%"
+                                        height="100%"
+                                        src={`https://www.youtube.com/embed/${game.youtubeId}`}
+                                        frameBorder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                        style={{ borderRadius: 12 }}
+                                    />
+                                )}
                             </View>
                         </GlassCard>
                     </>
