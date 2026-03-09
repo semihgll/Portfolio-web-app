@@ -96,18 +96,21 @@ export default function App() {
   useEffect(() => {
     const recordVisit = async () => {
       try {
+        console.log('Attempting to fetch IP...');
         const response = await fetch('https://api.ipify.org?format=json');
         const data = await response.json();
+        console.log('Fetched IP:', data.ip);
         if (data.ip) {
-          await addDoc(collection(db, 'visitors'), {
+          const docRef = await addDoc(collection(db, 'visitors'), {
             ip: data.ip,
             platform: Platform.OS,
             timestamp: serverTimestamp(),
             userAgent: Platform.OS === 'web' ? navigator.userAgent : 'Mobile App'
           });
+          console.log('Successfully recorded visit to Firestore:', docRef.id);
         }
       } catch (error) {
-        console.log('Failed to record visit:', error);
+        console.error('Failed to record visit error:', error);
       }
     };
 

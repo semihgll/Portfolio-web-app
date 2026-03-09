@@ -75,12 +75,14 @@ export const AdminScreen = () => {
 
     const fetchVisitors = async () => {
         try {
+            console.log('Fetching visitors from Firestore...');
             const q = query(collection(db, 'visitors'), orderBy('timestamp', 'desc'));
             const snapshot = await getDocs(q);
             const data = snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
             })) as Visitor[];
+            console.log('Fetched visitors count:', data.length);
             setVisitors(data);
         } catch (error) {
             console.error('Failed to fetch visitors:', error);

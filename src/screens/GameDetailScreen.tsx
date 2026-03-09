@@ -183,24 +183,6 @@ export const GameDetailScreen = () => {
                     </>
                 )}
 
-                {/* Game Banner / Cover (local) */}
-                {game.cover && (
-                    <Image
-                        source={game.cover}
-                        style={[styles.coverImage, { backgroundColor: 'rgba(0,0,0,0.3)' }]}
-                        resizeMode="contain"
-                    />
-                )}
-
-                {/* Cover URL from Firestore */}
-                {!game.cover && game.coverUrl && (
-                    <Image
-                        source={{ uri: game.coverUrl }}
-                        style={[styles.coverImage, { backgroundColor: 'rgba(0,0,0,0.3)' }]}
-                        resizeMode="contain"
-                    />
-                )}
-
                 <View style={{ height: 80 }} />
             </ScrollView>
         </View>
