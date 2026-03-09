@@ -17,6 +17,7 @@ import { ContactScreen } from './src/screens/ContactScreen';
 import { AdminScreen } from './src/screens/AdminScreen';
 import { AuthProvider } from './src/context/AuthContext';
 import { colors } from './src/theme/colors';
+import { Analytics } from '@vercel/analytics/react';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -103,6 +104,7 @@ export default function App() {
             <Stack.Screen name="Admin" component={AdminScreen} />
           </Stack.Navigator>
         </NavigationContainer>
+        <Analytics />
       </SafeAreaProvider>
     </AuthProvider>
   );

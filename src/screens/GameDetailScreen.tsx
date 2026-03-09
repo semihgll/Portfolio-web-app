@@ -84,24 +84,21 @@ export const GameDetailScreen = () => {
                 {/* Gallery Section - Local images */}
                 {game.images && game.images.length > 0 && (
                     <>
-                        <Text style={styles.sectionLabel}>Gallery</Text>
-                        <ScrollView
-                            horizontal
-                            showsHorizontalScrollIndicator={false}
-                            contentContainerStyle={styles.galleryScroll}
-                        >
+                        <Text style={styles.sectionLabel}>Galeri</Text>
+                        <View style={styles.galleryGrid}>
                             {game.images.map((img: any, index: number) => (
                                 <TouchableOpacity
                                     key={`local-${index}`}
                                     activeOpacity={0.9}
                                     onPress={() => setSelectedImage(img)}
+                                    style={styles.galleryItemWrapper}
                                 >
                                     <GlassCard style={styles.galleryCard} intensity={20}>
                                         <Image source={img} style={styles.galleryImage} resizeMode="cover" />
                                     </GlassCard>
                                 </TouchableOpacity>
                             ))}
-                        </ScrollView>
+                        </View>
                     </>
                 )}
 
@@ -109,25 +106,22 @@ export const GameDetailScreen = () => {
                 {game.imageUrls && game.imageUrls.length > 0 && (
                     <>
                         {!(game.images && game.images.length > 0) && (
-                            <Text style={styles.sectionLabel}>Gallery</Text>
+                            <Text style={styles.sectionLabel}>Galeri</Text>
                         )}
-                        <ScrollView
-                            horizontal
-                            showsHorizontalScrollIndicator={false}
-                            contentContainerStyle={styles.galleryScroll}
-                        >
+                        <View style={styles.galleryGrid}>
                             {game.imageUrls.map((url: string, index: number) => (
                                 <TouchableOpacity
                                     key={`url-${index}`}
                                     activeOpacity={0.9}
                                     onPress={() => setSelectedImage({ uri: url })}
+                                    style={styles.galleryItemWrapper}
                                 >
                                     <GlassCard style={styles.galleryCard} intensity={20}>
                                         <Image source={{ uri: url }} style={styles.galleryImage} resizeMode="cover" />
                                     </GlassCard>
                                 </TouchableOpacity>
                             ))}
-                        </ScrollView>
+                        </View>
                     </>
                 )}
 
@@ -164,7 +158,7 @@ export const GameDetailScreen = () => {
                 {/* Awards */}
                 {game.awards && game.awards.length > 0 && (
                     <>
-                        <Text style={styles.sectionLabel}>Awards</Text>
+                        <Text style={styles.sectionLabel}>Ödüller</Text>
                         {game.awards.map((award: any, index: number) => (
                             <GlassCard key={index} style={styles.awardCard} intensity={20}>
                                 <View style={styles.awardRow}>
@@ -309,9 +303,14 @@ const styles = StyleSheet.create({
         aspectRatio: 16 / 9,
         backgroundColor: '#000',
     },
-    galleryScroll: {
-        paddingRight: 20,
+    galleryGrid: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
         paddingBottom: 4,
+    },
+    galleryItemWrapper: {
+        marginRight: 12,
+        marginBottom: 12,
     },
     galleryCard: {
         padding: 0,
@@ -319,7 +318,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(20, 20, 20, 0.4)',
         width: 280,
         height: 160,
-        marginRight: 12,
     },
     galleryImage: {
         width: '100%',

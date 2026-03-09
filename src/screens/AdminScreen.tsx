@@ -113,10 +113,23 @@ export const AdminScreen = () => {
         try {
             console.log('Uploading file:', file.name, file.size, file.type);
 
+            // Convert File to Base64
+            const base64Data = await new Promise<string>((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => {
+                    const result = reader.result as string;
+                    // Remove data:image/xxx;base64, part
+                    const base64 = result.split(',')[1];
+                    resolve(base64);
+                };
+                reader.onerror = error => reject(error);
+            });
+
             // Upload to imgbb
             const formPayload = new FormData();
             formPayload.append('key', IMGBB_API_KEY);
-            formPayload.append('image', file);
+            formPayload.append('image', base64Data);
             formPayload.append('name', `portfolio_${Date.now()}`);
 
             const response = await fetch('https://api.imgbb.com/1/upload', {

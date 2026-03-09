@@ -18,8 +18,9 @@ const LOCAL_IMAGES: Record<string, any[]> = {
     'Astroneer': [require('../../assets/astro_dialog.png'), require('../../assets/astro_env.png'), require('../../assets/astro_menu.png')],
     'Whisper Woods': [require('../../assets/ww_chase.png'), require('../../assets/ww_esc.png'), require('../../assets/ww_mm.png'), require('../../assets/ww_esc.png'), require('../../assets/ww_text.png')],
     'Empire Conquest': [require('../../assets/eq_win.png'), require('../../assets/eq_start.png'), require('../../assets/eq_mm.png'), require('../../assets/eq_gp.png'), require('../../assets/eq_game.png')],
-    'Forgotten Inventions': [require('../../assets/fi_gm.png'), require('../../assets/fi_gpz_.png'), require('../../assets/fi_bomb.png'), require('../../assets/fi_mm.png'), require('../../assets/fi_tt.png')],
+    'Forgotten Inventions': [require('../../assets/fi_gm.png'), require('../../assets/fi_gpz_.png'), require('../../assets/fi_bomb.png'), require('../../assets/fi_mm.png'), require('../../assets/fi_tt.png'), require('../../assets/fi_vfx.gif')],
     'Ikarus Sculpture': [require('../../assets/icarus.png')],
+    'Pandoras Redemption': [require('../../assets/pr_anamenu.png'), require('../../assets/pr_pcg.png'), require('../../assets/pr.gif'), require('../../assets/pr_enemy_1_ice.png'), require('../../assets/pr_enemy_2.png'), require('../../assets/pr_stone.png'), require('../../assets/pr_char.png'), require('../../assets/pr_column.png')]
 };
 
 const LOCAL_COVERS: Record<string, any> = {
