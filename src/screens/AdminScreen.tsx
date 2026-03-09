@@ -44,10 +44,19 @@ const EMPTY_PROJECT: Project = {
     imageUrls: [],
 };
 
+interface Visitor {
+    id: string;
+    ip: string;
+    platform: string;
+    timestamp: any;
+    userAgent?: string;
+}
+
 export const AdminScreen = () => {
     const navigation = useNavigation<any>();
     const { user, isAdmin, signInWithGoogle, logout } = useAuth();
     const [projects, setProjects] = useState<Project[]>([]);
+    const [visitors, setVisitors] = useState<Visitor[]>([]);
     const [loading, setLoading] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     const [editingProject, setEditingProject] = useState<Project | null>(null);
@@ -60,8 +69,23 @@ export const AdminScreen = () => {
     useEffect(() => {
         if (isAdmin) {
             fetchProjects();
+            fetchVisitors();
         }
     }, [isAdmin]);
+
+    const fetchVisitors = async () => {
+        try {
+            const q = query(collection(db, 'visitors'), orderBy('timestamp', 'desc'));
+            const snapshot = await getDocs(q);
+            const data = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            })) as Visitor[];
+            setVisitors(data);
+        } catch (error) {
+            console.error('Failed to fetch visitors:', error);
+        }
+    };
 
     const fetchProjects = async () => {
         setLoading(true);
@@ -366,6 +390,31 @@ export const AdminScreen = () => {
                         <Text style={styles.emptySubText}>Yukaridaki butona tiklayarak ilk projenizi ekleyin.</Text>
                     </GlassCard>
                 )}
+
+                {/* Visitors Section */}
+                <View style={[styles.header, { marginTop: 40, marginBottom: 16 }]}>
+                    <Text style={styles.title}>Ziyaretçiler ({visitors.length})</Text>
+                </View>
+
+                {visitors.length === 0 && !loading && (
+                    <GlassCard style={styles.emptyCard} intensity={20}>
+                        <Text style={styles.emptyText}>Henuz ziyaret kaydi yok.</Text>
+                    </GlassCard>
+                )}
+
+                {visitors.map((visitor) => (
+                    <GlassCard key={visitor.id} style={styles.projectCard} intensity={20}>
+                        <View style={styles.projectRow}>
+                            <View style={{ flex: 1 }}>
+                                <Text style={styles.projectTitle}>{visitor.ip}</Text>
+                                <Text style={styles.projectCategory}>Platform: {visitor.platform}</Text>
+                                <Text style={styles.projectStatus}>
+                                    {visitor.timestamp?.toDate ? visitor.timestamp.toDate().toLocaleString('tr-TR') : 'Bilinmeyen Tarih'}
+                                </Text>
+                            </View>
+                        </View>
+                    </GlassCard>
+                ))}
 
                 <View style={{ height: 120 }} />
             </ScrollView>

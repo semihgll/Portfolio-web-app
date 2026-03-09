@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -16,8 +16,9 @@ import { CertificatesScreen } from './src/screens/CertificatesScreen';
 import { ContactScreen } from './src/screens/ContactScreen';
 import { AdminScreen } from './src/screens/AdminScreen';
 import { AuthProvider } from './src/context/AuthContext';
+import { db } from './src/config/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { colors } from './src/theme/colors';
-import { Analytics } from '@vercel/analytics/react';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -92,6 +93,27 @@ function TabNavigator() {
 const ADMIN_EMAIL = 'semihgul258@gmail.com';
 
 export default function App() {
+  useEffect(() => {
+    const recordVisit = async () => {
+      try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        if (data.ip) {
+          await addDoc(collection(db, 'visitors'), {
+            ip: data.ip,
+            platform: Platform.OS,
+            timestamp: serverTimestamp(),
+            userAgent: Platform.OS === 'web' ? navigator.userAgent : 'Mobile App'
+          });
+        }
+      } catch (error) {
+        console.log('Failed to record visit:', error);
+      }
+    };
+
+    recordVisit();
+  }, []);
+
   return (
     <AuthProvider adminEmail={ADMIN_EMAIL}>
       <SafeAreaProvider>
@@ -104,7 +126,6 @@ export default function App() {
             <Stack.Screen name="Admin" component={AdminScreen} />
           </Stack.Navigator>
         </NavigationContainer>
-        <Analytics />
       </SafeAreaProvider>
     </AuthProvider>
   );
