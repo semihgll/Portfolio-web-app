@@ -75,14 +75,12 @@ export const AdminScreen = () => {
 
     const fetchVisitors = async () => {
         try {
-            console.log('Fetching visitors from Firestore...');
             const q = query(collection(db, 'visitors'), orderBy('timestamp', 'desc'));
             const snapshot = await getDocs(q);
             const data = snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
             })) as Visitor[];
-            console.log('Fetched visitors count:', data.length);
             setVisitors(data);
         } catch (error) {
             console.error('Failed to fetch visitors:', error);
@@ -395,7 +393,11 @@ export const AdminScreen = () => {
 
                 {/* Visitors Section */}
                 <View style={[styles.header, { marginTop: 40, marginBottom: 16 }]}>
-                    <Text style={styles.title}>Ziyaretçiler ({visitors.length})</Text>
+                    {/* Calculate unique IPs */}
+                    <Text style={styles.title}>
+                        Ziyaretçiler ({visitors.length} ziyaret, {' '}
+                        {Object.keys(visitors.reduce((acc, v) => ({ ...acc, [v.ip]: true }), {})).length} tekil)
+                    </Text>
                 </View>
 
                 {visitors.length === 0 && !loading && (
@@ -404,15 +406,32 @@ export const AdminScreen = () => {
                     </GlassCard>
                 )}
 
-                {visitors.map((visitor) => (
-                    <GlassCard key={visitor.id} style={styles.projectCard} intensity={20}>
+                {Object.entries(visitors.reduce((acc, visitor) => {
+                    if (!acc[visitor.ip]) acc[visitor.ip] = [];
+                    acc[visitor.ip].push(visitor);
+                    return acc;
+                }, {} as Record<string, Visitor[]>)).map(([ip, visits]) => (
+                    <GlassCard key={ip} style={styles.projectCard} intensity={20}>
                         <View style={styles.projectRow}>
                             <View style={{ flex: 1 }}>
-                                <Text style={styles.projectTitle}>{visitor.ip}</Text>
-                                <Text style={styles.projectCategory}>Platform: {visitor.platform}</Text>
-                                <Text style={styles.projectStatus}>
-                                    {visitor.timestamp?.toDate ? visitor.timestamp.toDate().toLocaleString('tr-TR') : 'Bilinmeyen Tarih'}
+                                <Text style={styles.projectTitle}>{ip}</Text>
+                                <Text style={styles.projectCategory}>Platform: {visits[0].platform}</Text>
+                                <Text style={[styles.projectStatus, { marginTop: 4, fontWeight: 'bold' }]}>
+                                    Toplam {visits.length} defa girdi.
                                 </Text>
+
+                                <View style={{ marginTop: 8, paddingLeft: 8, borderLeftWidth: 2, borderLeftColor: '#444' }}>
+                                    {visits.slice(0, 5).map((v) => (
+                                        <Text key={v.id} style={{ fontSize: 11, color: '#888', marginBottom: 2 }}>
+                                            {v.timestamp?.toDate ? v.timestamp.toDate().toLocaleString('tr-TR') : 'Bilinmeyen Tarih'}
+                                        </Text>
+                                    ))}
+                                    {visits.length > 5 && (
+                                        <Text style={{ fontSize: 11, color: '#666', marginTop: 2 }}>
+                                            +{visits.length - 5} daha eski ziyaret...
+                                        </Text>
+                                    )}
+                                </View>
                             </View>
                         </View>
                     </GlassCard>

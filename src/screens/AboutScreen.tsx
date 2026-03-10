@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Code, Layers, MessageSquare, Terminal } from 'lucide-react-native';
+import { Code, Layers, MessageSquare, Terminal, Github } from 'lucide-react-native';
 import { colors } from '../theme/colors';
 import { GlassCard } from '../components/GlassCard';
 import { AbstractBackground } from '../components/AbstractBackground';
@@ -24,6 +24,14 @@ export const AboutScreen = () => {
                     <Text style={[styles.bioText, { marginTop: 16 }]}>
                         My diverse background allows me to approach problems from unique angles, blending logical programming patterns with creative design thinking.
                     </Text>
+
+                    <TouchableOpacity
+                        style={styles.githubButton}
+                        onPress={() => Linking.openURL('https://github.com/semihgll')}
+                    >
+                        <Github color={colors.text} size={24} />
+                        <Text style={styles.githubButtonText}>GitHub Profilimi Ziyaret Et</Text>
+                    </TouchableOpacity>
                 </GlassCard>
                 <View style={{ height: 120 }} />
             </ScrollView>
@@ -69,6 +77,23 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: colors.text,
         lineHeight: 28,
+    },
+    githubButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 24,
+        padding: 12,
+        backgroundColor: 'rgba(255,255,255,0.05)',
+        borderRadius: 12,
+        alignSelf: 'flex-start',
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.1)',
+    },
+    githubButtonText: {
+        color: colors.text,
+        marginLeft: 10,
+        fontSize: 16,
+        fontWeight: '600',
     },
     sectionTitle: {
         fontSize: 22,
