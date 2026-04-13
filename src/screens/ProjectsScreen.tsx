@@ -40,10 +40,11 @@ const LOCAL_DEVLOGS: Record<string, any[]> = {
             date: '10 Nisan 2026',
             version: 'v0.2.1',
             title: 'Procedural Content Generation ile çevre elementleri tasarımı',
-            content: 'Procedural Content Generation ile çevre elementleri tasarlandı. Bu sayede oyunun her bölümü farklı bir deneyim sunuyor.',
+            content: 'Procedural Content Generation ile çevre elementlerini prosedürel bi şekilde oluşturdum.',
             images: [
                 require('../../assets/pr_pcggragp.png'),
-                require('../../assets/pr_pcgout.png')
+                require('../../assets/pr_pcgout.png'),
+                require('../../assets/pr_pcg2.png'),
             ]
         },
 
