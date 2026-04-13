@@ -183,6 +183,46 @@ export const GameDetailScreen = () => {
                     </>
                 )}
 
+                {/* Dev Logs */}
+                {game.devLogs && game.devLogs.length > 0 && (
+                    <>
+                        <Text style={styles.sectionLabel}>Geliştirici Günlüğü</Text>
+                        <View style={styles.devLogContainer}>
+                            {game.devLogs.map((log: any, index: number) => (
+                                <GlassCard key={`devlog-${index}`} style={styles.devLogCard} intensity={20}>
+                                    <View style={styles.devLogHeader}>
+                                        <Text style={styles.devLogDate}>{log.date}</Text>
+                                        {log.version && (
+                                            <View style={styles.devLogVersionBadge}>
+                                                <Text style={styles.devLogVersionText}>{log.version}</Text>
+                                            </View>
+                                        )}
+                                    </View>
+                                    <Text style={styles.devLogTitle}>{log.title}</Text>
+                                    
+                                    {log.images && log.images.length > 0 && (
+                                        <View style={styles.devLogImagesGrid}>
+                                            {log.images.map((img: any, imgIdx: number) => (
+                                                <TouchableOpacity
+                                                    key={`dl-img-${imgIdx}`}
+                                                    activeOpacity={0.9}
+                                                    onPress={() => setSelectedImage(img)}
+                                                    style={styles.devLogImageWrapper}
+                                                >
+                                                    <Image source={img} style={styles.devLogImage} resizeMode="cover" />
+                                                </TouchableOpacity>
+                                            ))}
+                                        </View>
+                                    )}
+
+                                    <View style={styles.divider} />
+                                    <Text style={styles.devLogContent}>{log.content}</Text>
+                                </GlassCard>
+                            ))}
+                        </View>
+                    </>
+                )}
+
                 <View style={{ height: 80 }} />
             </ScrollView>
         </View>
@@ -371,5 +411,67 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: '800',
         marginLeft: 12,
+    },
+    devLogContainer: {
+        marginBottom: 16,
+    },
+    devLogCard: {
+        padding: 16,
+        marginBottom: 12,
+        backgroundColor: 'rgba(20, 20, 20, 0.4)',
+        borderLeftWidth: 4,
+        borderLeftColor: colors.primary,
+    },
+    devLogHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 4,
+    },
+    devLogDate: {
+        fontSize: 13,
+        color: colors.textMuted,
+        fontWeight: '600',
+    },
+    devLogVersionBadge: {
+        backgroundColor: 'rgba(255,255,255,0.08)',
+        paddingHorizontal: 8,
+        paddingVertical: 3,
+        borderRadius: 8,
+    },
+    devLogVersionText: {
+        fontSize: 11,
+        color: colors.primary,
+        fontWeight: 'bold',
+    },
+    devLogTitle: {
+        fontSize: 18,
+        fontWeight: '700',
+        color: colors.text,
+        marginBottom: 12,
+    },
+    devLogContent: {
+        fontSize: 14,
+        color: colors.textMuted,
+        lineHeight: 24,
+        marginTop: 12,
+    },
+    devLogImagesGrid: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        marginBottom: 12,
+        gap: 8,
+    },
+    devLogImageWrapper: {
+        flexGrow: 1,
+        flexShrink: 1,
+        flexBasis: 130,
+        height: 140,
+        borderRadius: 8,
+        overflow: 'hidden',
+    },
+    devLogImage: {
+        width: '100%',
+        height: '100%',
     },
 });

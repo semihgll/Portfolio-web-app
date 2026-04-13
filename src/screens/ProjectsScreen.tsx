@@ -25,11 +25,28 @@ const LOCAL_IMAGES: Record<string, any[]> = {
 
 const LOCAL_COVERS: Record<string, any> = {
     'Forgotten Inventions': require('../../assets/fi_cover.jpg'),
+    'Pandoras Redemption': require('../../assets/pr_kapak2.png'),
 };
 
 const LOCAL_AWARDS: Record<string, any[]> = {
     'Abonetor': [
         { title: 'Netmarble Game Jam & Incubation Program', event: 'Incube Programında Barış Özistek gibi değerli insanlardan pazarlama ve geliştirme konusunda çok değerli eğitimler aldık. Bu programı 2.likle bitirdik. Çok değerli ödüller aldık.', rank: '2st Place', rankColor: '#ffffffff' },
+    ],
+};
+
+const LOCAL_DEVLOGS: Record<string, any[]> = {
+    'Pandoras Redemption': [
+        {
+            date: '10 Nisan 2026',
+            version: 'v0.2.1',
+            title: 'Procedural Content Generation ile çevre elementleri tasarımı',
+            content: 'Procedural Content Generation ile çevre elementleri tasarlandı. Bu sayede oyunun her bölümü farklı bir deneyim sunuyor.',
+            images: [
+                require('../../assets/pr_pcggragp.png'),
+                require('../../assets/pr_pcgout.png')
+            ]
+        },
+
     ],
 };
 
@@ -98,6 +115,10 @@ export const ProjectsScreen = () => {
         // Add awards
         if (LOCAL_AWARDS[project.title]) {
             enriched.awards = LOCAL_AWARDS[project.title];
+        }
+        // Add dev logs
+        if (LOCAL_DEVLOGS[project.title]) {
+            enriched.devLogs = LOCAL_DEVLOGS[project.title];
         }
         return enriched;
     };
