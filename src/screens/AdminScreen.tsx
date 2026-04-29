@@ -207,9 +207,9 @@ export const AdminScreen = () => {
     const saveProject = async () => {
         if (!formData.title.trim()) {
             if (Platform.OS === 'web') {
-                window.alert('Proje basligi bos olamaz!');
+                window.alert('Project title cannot be empty!');
             } else {
-                Alert.alert('Hata', 'Proje basligi bos olamaz!');
+                Alert.alert('Error', 'Project title cannot be empty!');
             }
             return;
         }
@@ -234,9 +234,9 @@ export const AdminScreen = () => {
         } catch (error) {
             console.error('Save error:', error);
             if (Platform.OS === 'web') {
-                window.alert('Kaydetme hatasi: ' + error);
+                window.alert('Save error: ' + error);
             } else {
-                Alert.alert('Hata', 'Kaydederken bir hata olustu.');
+                Alert.alert('Error', 'An error occurred while saving.');
             }
         }
     };
@@ -252,13 +252,13 @@ export const AdminScreen = () => {
         };
 
         if (Platform.OS === 'web') {
-            if (window.confirm('Bu projeyi silmek istediginizden emin misiniz?')) {
+            if (window.confirm('Are you sure you want to delete this project?')) {
                 doDelete();
             }
         } else {
-            Alert.alert('Silme Onayi', 'Bu projeyi silmek istediginizden emin misiniz?', [
-                { text: 'Iptal', style: 'cancel' },
-                { text: 'Sil', style: 'destructive', onPress: doDelete },
+            Alert.alert('Delete Confirmation', 'Are you sure you want to delete this project?', [
+                { text: 'Cancel', style: 'cancel' },
+                { text: 'Delete', style: 'destructive', onPress: doDelete },
             ]);
         }
     };
@@ -272,16 +272,16 @@ export const AdminScreen = () => {
                     <GlassCard style={styles.loginCard} intensity={25}>
                         <Text style={styles.loginTitle}>Admin Panel</Text>
                         <Text style={styles.loginSubtitle}>
-                            Devam etmek icin Google hesabinizla giris yapin
+                            Sign in with your Google account to continue
                         </Text>
                         <TouchableOpacity style={styles.googleBtn} onPress={signInWithGoogle} activeOpacity={0.8}>
-                            <Text style={styles.googleBtnText}>Google ile Giris Yap</Text>
+                            <Text style={styles.googleBtnText}>Sign in with Google</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={styles.backLink}
                             onPress={() => navigation.navigate('MainTabs')}
                         >
-                            <Text style={styles.backLinkText}>Ana Sayfaya Don</Text>
+                            <Text style={styles.backLinkText}>Return to Home Page</Text>
                         </TouchableOpacity>
                     </GlassCard>
                 </View>
@@ -296,18 +296,18 @@ export const AdminScreen = () => {
                 <AbstractBackground />
                 <View style={styles.loginContainer}>
                     <GlassCard style={styles.loginCard} intensity={25}>
-                        <Text style={styles.loginTitle}>Yetkisiz Erisim</Text>
+                        <Text style={styles.loginTitle}>Unauthorized Access</Text>
                         <Text style={styles.loginSubtitle}>
-                            Bu hesap ({user.email}) admin yetkisine sahip degil.
+                            This account ({user.email}) does not have admin privileges.
                         </Text>
                         <TouchableOpacity style={styles.logoutBtn} onPress={logout} activeOpacity={0.8}>
-                            <Text style={styles.logoutBtnText}>Cikis Yap</Text>
+                            <Text style={styles.logoutBtnText}>Log Out</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={styles.backLink}
                             onPress={() => navigation.navigate('MainTabs')}
                         >
-                            <Text style={styles.backLinkText}>Ana Sayfaya Don</Text>
+                            <Text style={styles.backLinkText}>Return to Home Page</Text>
                         </TouchableOpacity>
                     </GlassCard>
                 </View>
@@ -338,7 +338,7 @@ export const AdminScreen = () => {
                 {/* Add Project Button */}
                 <TouchableOpacity style={styles.addBtn} onPress={openAddModal} activeOpacity={0.8}>
                     <Plus color="#fff" size={20} />
-                    <Text style={styles.addBtnText}>Yeni Proje Ekle</Text>
+                    <Text style={styles.addBtnText}>Add New Project</Text>
                 </TouchableOpacity>
 
                 {/* Loading */}
@@ -360,7 +360,7 @@ export const AdminScreen = () => {
                                 )}
                                 {project.imageUrls && project.imageUrls.length > 0 && (
                                     <Text style={styles.imageCount}>
-                                        {project.imageUrls.length} gorsel
+                                        {project.imageUrls.length} images
                                     </Text>
                                 )}
                             </View>
@@ -386,8 +386,8 @@ export const AdminScreen = () => {
 
                 {!loading && projects.length === 0 && (
                     <GlassCard style={styles.emptyCard} intensity={20}>
-                        <Text style={styles.emptyText}>Henuz proje eklenmedi.</Text>
-                        <Text style={styles.emptySubText}>Yukaridaki butona tiklayarak ilk projenizi ekleyin.</Text>
+                        <Text style={styles.emptyText}>No projects added yet.</Text>
+                        <Text style={styles.emptySubText}>Add your first project by clicking the button above.</Text>
                     </GlassCard>
                 )}
 
@@ -395,14 +395,14 @@ export const AdminScreen = () => {
                 <View style={[styles.header, { marginTop: 40, marginBottom: 16 }]}>
                     {/* Calculate unique IPs */}
                     <Text style={styles.title}>
-                        Ziyaretçiler ({visitors.length} ziyaret, {' '}
-                        {Object.keys(visitors.reduce((acc, v) => ({ ...acc, [v.ip]: true }), {})).length} tekil)
+                        Visitors ({visitors.length} visits, {' '}
+                        {Object.keys(visitors.reduce((acc, v) => ({ ...acc, [v.ip]: true }), {})).length} unique)
                     </Text>
                 </View>
 
                 {visitors.length === 0 && !loading && (
                     <GlassCard style={styles.emptyCard} intensity={20}>
-                        <Text style={styles.emptyText}>Henuz ziyaret kaydi yok.</Text>
+                        <Text style={styles.emptyText}>No visit records yet.</Text>
                     </GlassCard>
                 )}
 
@@ -417,18 +417,18 @@ export const AdminScreen = () => {
                                 <Text style={styles.projectTitle}>{ip}</Text>
                                 <Text style={styles.projectCategory}>Platform: {visits[0].platform}</Text>
                                 <Text style={[styles.projectStatus, { marginTop: 4, fontWeight: 'bold' }]}>
-                                    Toplam {visits.length} defa girdi.
+                                    Entered {visits.length} times in total.
                                 </Text>
 
                                 <View style={{ marginTop: 8, paddingLeft: 8, borderLeftWidth: 2, borderLeftColor: '#444' }}>
                                     {visits.slice(0, 5).map((v) => (
                                         <Text key={v.id} style={{ fontSize: 11, color: '#888', marginBottom: 2 }}>
-                                            {v.timestamp?.toDate ? v.timestamp.toDate().toLocaleString('tr-TR') : 'Bilinmeyen Tarih'}
+                                            {v.timestamp?.toDate ? v.timestamp.toDate().toLocaleString('en-US') : 'Unknown Date'}
                                         </Text>
                                     ))}
                                     {visits.length > 5 && (
                                         <Text style={{ fontSize: 11, color: '#666', marginTop: 2 }}>
-                                            +{visits.length - 5} daha eski ziyaret...
+                                            +{visits.length - 5} older visits...
                                         </Text>
                                     )}
                                 </View>
@@ -448,23 +448,23 @@ export const AdminScreen = () => {
                         <ScrollView showsVerticalScrollIndicator={false}>
                             <View style={styles.modalHeader}>
                                 <Text style={styles.modalTitle}>
-                                    {editingProject ? 'Projeyi Duzenle' : 'Yeni Proje'}
+                                    {editingProject ? 'Edit Project' : 'New Project'}
                                 </Text>
                                 <TouchableOpacity onPress={() => setModalVisible(false)}>
                                     <X color={colors.text} size={24} />
                                 </TouchableOpacity>
                             </View>
 
-                            <Text style={styles.label}>Baslik *</Text>
+                            <Text style={styles.label}>Title *</Text>
                             <TextInput
                                 style={styles.input}
                                 value={formData.title}
                                 onChangeText={(t) => setFormData({ ...formData, title: t })}
-                                placeholder="Proje adi"
+                                placeholder="Project name"
                                 placeholderTextColor="#555"
                             />
 
-                            <Text style={styles.label}>Kategori</Text>
+                            <Text style={styles.label}>Category</Text>
                             <View style={styles.categoryRow}>
                                 {CATEGORIES.map((cat) => (
                                     <TouchableOpacity
@@ -487,12 +487,12 @@ export const AdminScreen = () => {
                                 ))}
                             </View>
 
-                            <Text style={styles.label}>Aciklama</Text>
+                            <Text style={styles.label}>Description</Text>
                             <TextInput
                                 style={[styles.input, styles.textArea]}
                                 value={formData.description}
                                 onChangeText={(t) => setFormData({ ...formData, description: t })}
-                                placeholder="Proje aciklamasi"
+                                placeholder="Project description"
                                 placeholderTextColor="#555"
                                 multiline
                                 numberOfLines={4}
@@ -500,7 +500,7 @@ export const AdminScreen = () => {
 
                             {formData.category === 'Game Dev' && (
                                 <>
-                                    <Text style={styles.label}>Motor (opsiyonel)</Text>
+                                    <Text style={styles.label}>Engine (optional)</Text>
                                     <TextInput
                                         style={styles.input}
                                         value={formData.engine}
@@ -511,7 +511,7 @@ export const AdminScreen = () => {
                                 </>
                             )}
 
-                            <Text style={styles.label}>Platform (opsiyonel)</Text>
+                            <Text style={styles.label}>Platform (optional)</Text>
                             <TextInput
                                 style={styles.input}
                                 value={formData.platform}
@@ -522,7 +522,7 @@ export const AdminScreen = () => {
 
                             {formData.category === 'Game Dev' && (
                                 <>
-                                    <Text style={styles.label}>Durum (opsiyonel)</Text>
+                                    <Text style={styles.label}>Status (optional)</Text>
                                     <TextInput
                                         style={styles.input}
                                         value={formData.status}
@@ -542,14 +542,14 @@ export const AdminScreen = () => {
                                 placeholderTextColor="#555"
                             />
 
-                            <Text style={styles.label}>Kapak Gorseli</Text>
+                            <Text style={styles.label}>Cover Image</Text>
                             <View style={styles.addImageRow}>
                                 <View style={{ flex: 1, marginRight: 8 }}>
                                     <TextInput
                                         style={styles.input}
                                         value={formData.coverUrl}
                                         onChangeText={(t) => setFormData({ ...formData, coverUrl: t })}
-                                        placeholder="URL yapistir veya dosya yukle"
+                                        placeholder="Paste URL or upload file"
                                         placeholderTextColor="#555"
                                     />
                                 </View>
@@ -594,11 +594,11 @@ export const AdminScreen = () => {
                             )}
 
                             {/* Image URLs Section */}
-                            <Text style={styles.label}>Galeri Gorselleri</Text>
+                            <Text style={styles.label}>Gallery Images</Text>
                             {uploading && (
                                 <View style={{ padding: 12, alignItems: 'center' }}>
                                     <ActivityIndicator size="small" color="#fff" />
-                                    <Text style={{ color: '#888', fontSize: 12, marginTop: 4 }}>Yukleniyor...</Text>
+                                    <Text style={{ color: '#888', fontSize: 12, marginTop: 4 }}>Loading...</Text>
                                 </View>
                             )}
                             {(formData.imageUrls || []).map((url, index) => (
@@ -620,7 +620,7 @@ export const AdminScreen = () => {
                                         style={styles.input}
                                         value={newImageUrl}
                                         onChangeText={setNewImageUrl}
-                                        placeholder="URL yapistir"
+                                        placeholder="Paste URL"
                                         placeholderTextColor="#555"
                                         onSubmitEditing={addImageUrl}
                                     />
@@ -633,7 +633,7 @@ export const AdminScreen = () => {
                                 </TouchableOpacity>
                             </View>
 
-                            <Text style={styles.label}>Siralama (order)</Text>
+                            <Text style={styles.label}>Order</Text>
                             <TextInput
                                 style={styles.input}
                                 value={String(formData.order ?? 0)}
@@ -646,7 +646,7 @@ export const AdminScreen = () => {
                             <TouchableOpacity style={styles.saveBtn} onPress={saveProject} activeOpacity={0.8}>
                                 <Save color="#fff" size={18} />
                                 <Text style={styles.saveBtnText}>
-                                    {editingProject ? 'Guncelle' : 'Kaydet'}
+                                    {editingProject ? 'Update' : 'Save'}
                                 </Text>
                             </TouchableOpacity>
 

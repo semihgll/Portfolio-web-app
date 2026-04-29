@@ -10,9 +10,9 @@ const CERTIFICATES = [
     {
         id: 1,
         title: 'Bahçeşehir University Move Up',
-        issuer: 'Bir günde geleceğine yön ver!',
+        issuer: 'Shape your future in one day!',
         date: '2020',
-        description: 'Yapay Zeka, Modelleme, Dijital İletişimde Yaratıcılık gibi konulardan gerçekten çok önemli bilgiler öğrendiğim bir eğitimdi özellikle Şafak Şahin Bey yaratıcılık konusunda önemli bilgiler verdi.',
+        description: 'It was a training where I learned really important information about Artificial Intelligence, Modeling, and Creativity in Digital Communication. Mr. Şafak Şahin gave very important insights about creativity.',
         image: require('../../assets/sertifika_MoveUp.png'),
     },
 ];
@@ -26,7 +26,7 @@ const EVENTS = [
         organizer: 'Muğla Sıtkı Koçman Üniversitesi',
         date: '2023',
         duration: '48 hours',
-        description: 'Elimizden gelenin en iyisini takım olarak yapmaya çalıştık.',
+        description: 'We tried to do our best as a team.',
     },
     {
         id: 2,
@@ -34,21 +34,21 @@ const EVENTS = [
         organizer: 'İzmir Ekonomi Üniversitesi',
         date: '2020',
         duration: '48 hours',
-        description: 'Çok eğlendiğim bir etkinlikti. Zamana karşı verdiğimiz mücadele bana çok fazla deneyim kattı.',
+        description: 'It was an event I enjoyed a lot. Our struggle against time gave me a lot of experience.',
     },
     {
         id: 3,
         title: 'ITU Dijifikir Yarışması & Bilişim Teknolojileri Zirvesi',
         organizer: 'İTÜ',
         date: '2019',
-        description: 'Bu etkinlikte hem yarışmaya katıldım hem de zirveye katılarak çok önemli bilgiler edindim.',
+        description: 'In this event, I both participated in the competition and gained very important information by attending the summit.',
     },
     {
         id: 4,
         title: 'Dokuz Eylül Game Jam',
         organizer: 'Dokuz Eylül Üniversitesi',
         date: '2018',
-        description: 'Bu projede VR ve eğitim odaklı ilerledim. Geliştirici olarak yer aldım projede. Güzel bir etkinlikti.',
+        description: 'In this project, I focused on VR and education. I took part as a developer. It was a nice event.',
     },
 ];
 
@@ -131,9 +131,9 @@ export const CertificatesScreen = () => {
                             />
                         ) : (
                             <View style={styles.placeholderImage}>
-                                <Text style={styles.placeholderText}>Eksik var!</Text>
+                                <Text style={styles.placeholderText}>Missing!</Text>
                                 <Text style={styles.placeholderSubText}>
-                                    Sertifika görselini assets klasörüne ekle
+                                    Add certificate image to assets folder
                                 </Text>
                             </View>
                         )}

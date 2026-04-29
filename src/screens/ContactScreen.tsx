@@ -49,7 +49,7 @@ const SocialButton = ({ icon, title, url }: any) => {
                 if (supported) {
                     await Linking.openURL(url);
                 } else {
-                    Alert.alert(`Bağlantı açılamıyor`, `URL: ${url}`);
+                    Alert.alert(`Cannot open link`, `URL: ${url}`);
                 }
             } catch (error) {
                 console.error("An error occurred", error);

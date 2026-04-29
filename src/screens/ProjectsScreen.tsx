@@ -8,7 +8,7 @@ import { AbstractBackground } from '../components/AbstractBackground';
 import { db } from '../config/firebase';
 import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 
-// ————— Local asset map (hardcoded görseller için) —————
+// ————— Local asset map (for hardcoded images) —————
 const ENGINE_ICONS: Record<string, any> = {
     'Unity': require('../../assets/unity_icon.png'),
     'Unreal Engine': require('../../assets/unreal_icon.png'),
@@ -30,7 +30,7 @@ const LOCAL_COVERS: Record<string, any> = {
 
 const LOCAL_AWARDS: Record<string, any[]> = {
     'Abonetor': [
-        { title: 'Netmarble Game Jam & Incubation Program', event: 'Incube Programında Barış Özistek gibi değerli insanlardan pazarlama ve geliştirme konusunda çok değerli eğitimler aldık. Bu programı 2.likle bitirdik. Çok değerli ödüller aldık.', rank: '2st Place', rankColor: '#ffffffff' },
+        { title: 'Netmarble Game Jam & Incubation Program', event: 'We received highly valuable training in marketing and development from esteemed individuals like Barış Özistek in the Incube Program. We finished this program in 2nd place and received very valuable awards.', rank: '2st Place', rankColor: '#ffffffff' },
     ],
 };
 
@@ -39,8 +39,8 @@ const LOCAL_DEVLOGS: Record<string, any[]> = {
         {
             date: '10 Nisan 2026',
             version: 'v0.2.1',
-            title: 'Procedural Content Generation ile çevre elementleri tasarımı',
-            content: 'Procedural Content Generation ile çevre elementlerini prosedürel bi şekilde oluşturdum.',
+            title: 'Environment element design with Procedural Content Generation',
+            content: 'I created environment elements procedurally using Procedural Content Generation.',
             images: [
                 require('../../assets/pr_pcggragp.png'),
                 require('../../assets/pr_pcgout.png'),
@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
     },
     gameCoverContainer: {
         width: '100%',
-        aspectRatio: 1, // Kare veya istediğiniz oran
+        aspectRatio: 1, // Square or desired ratio
         backgroundColor: 'rgba(0,0,0,0.3)',
     },
     gameCoverImage: {

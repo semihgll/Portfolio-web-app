@@ -39,7 +39,7 @@ export const GameDetailScreen = () => {
                     {game.engine && (
                         <>
                             <View style={styles.infoRow}>
-                                <Text style={styles.infoLabel}>Motor</Text>
+                                <Text style={styles.infoLabel}>Engine</Text>
                                 <Text style={styles.infoValue}>{game.engine}</Text>
                             </View>
                             <View style={styles.divider} />
@@ -51,14 +51,14 @@ export const GameDetailScreen = () => {
                     </View>
                     <View style={styles.divider} />
                     <View style={styles.infoRow}>
-                        <Text style={styles.infoLabel}>Durum</Text>
+                        <Text style={styles.infoLabel}>Status</Text>
                         <Text style={styles.infoValue}>{game.status || '—'}</Text>
                     </View>
                 </GlassCard>
 
                 {/* Description */}
                 <GlassCard style={styles.descCard} intensity={20}>
-                    <Text style={styles.descTitle}>Hakkında</Text>
+                    <Text style={styles.descTitle}>About</Text>
                     <Text style={styles.descText}>{game.description}</Text>
                 </GlassCard>
 
@@ -92,7 +92,7 @@ export const GameDetailScreen = () => {
                 {/* Gallery Section - Local images */}
                 {game.images && game.images.length > 0 && (
                     <>
-                        <Text style={styles.sectionLabel}>Galeri</Text>
+                        <Text style={styles.sectionLabel}>Gallery</Text>
                         <View style={styles.galleryGrid}>
                             {game.images.map((img: any, index: number) => (
                                 <TouchableOpacity
@@ -114,7 +114,7 @@ export const GameDetailScreen = () => {
                 {game.imageUrls && game.imageUrls.length > 0 && (
                     <>
                         {!(game.images && game.images.length > 0) && (
-                            <Text style={styles.sectionLabel}>Galeri</Text>
+                            <Text style={styles.sectionLabel}>Gallery</Text>
                         )}
                         <View style={styles.galleryGrid}>
                             {game.imageUrls.map((url: string, index: number) => (
@@ -166,7 +166,7 @@ export const GameDetailScreen = () => {
                 {/* Awards */}
                 {game.awards && game.awards.length > 0 && (
                     <>
-                        <Text style={styles.sectionLabel}>Ödüller</Text>
+                        <Text style={styles.sectionLabel}>Awards</Text>
                         {game.awards.map((award: any, index: number) => (
                             <GlassCard key={index} style={styles.awardCard} intensity={20}>
                                 <View style={styles.awardRow}>
@@ -186,7 +186,7 @@ export const GameDetailScreen = () => {
                 {/* Dev Logs */}
                 {game.devLogs && game.devLogs.length > 0 && (
                     <>
-                        <Text style={styles.sectionLabel}>Geliştirici Günlüğü</Text>
+                        <Text style={styles.sectionLabel}>Dev Log</Text>
                         <View style={styles.devLogContainer}>
                             {game.devLogs.map((log: any, index: number) => (
                                 <GlassCard key={`devlog-${index}`} style={styles.devLogCard} intensity={20}>

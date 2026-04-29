@@ -30,7 +30,7 @@ export const AboutScreen = () => {
                         onPress={() => Linking.openURL('https://github.com/semihgll')}
                     >
                         <Github color={colors.text} size={24} />
-                        <Text style={styles.githubButtonText}>GitHub Profilimi Ziyaret Et</Text>
+                        <Text style={styles.githubButtonText}>Visit My GitHub Profile</Text>
                     </TouchableOpacity>
                 </GlassCard>
                 <View style={{ height: 120 }} />
