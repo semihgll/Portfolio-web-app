@@ -28,6 +28,7 @@ interface Project {
     order?: number;
     coverUrl?: string;
     imageUrls?: string[];
+    blueprints?: { title: string; url: string }[];
 }
 
 const CATEGORIES = ['Game Dev', 'Mobile App', '3D Art', 'Writing / Lore'];
@@ -42,6 +43,7 @@ const EMPTY_PROJECT: Project = {
     youtubeId: '',
     coverUrl: '',
     imageUrls: [],
+    blueprints: [],
 };
 
 interface Visitor {
@@ -62,6 +64,8 @@ export const AdminScreen = () => {
     const [editingProject, setEditingProject] = useState<Project | null>(null);
     const [formData, setFormData] = useState<Project>(EMPTY_PROJECT);
     const [newImageUrl, setNewImageUrl] = useState('');
+    const [newBlueprintTitle, setNewBlueprintTitle] = useState('');
+    const [newBlueprintUrl, setNewBlueprintUrl] = useState('');
     const [uploading, setUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const coverInputRef = useRef<HTMLInputElement | null>(null);
@@ -107,13 +111,21 @@ export const AdminScreen = () => {
         setEditingProject(null);
         setFormData({ ...EMPTY_PROJECT, order: projects.length });
         setNewImageUrl('');
+        setNewBlueprintTitle('');
+        setNewBlueprintUrl('');
         setModalVisible(true);
     };
 
     const openEditModal = (project: Project) => {
         setEditingProject(project);
-        setFormData({ ...project, imageUrls: project.imageUrls || [] });
+        setFormData({
+            ...project,
+            imageUrls: project.imageUrls || [],
+            blueprints: project.blueprints || []
+        });
         setNewImageUrl('');
+        setNewBlueprintTitle('');
+        setNewBlueprintUrl('');
         setModalVisible(true);
     };
 
@@ -130,6 +142,25 @@ export const AdminScreen = () => {
         const updated = [...(formData.imageUrls || [])];
         updated.splice(index, 1);
         setFormData({ ...formData, imageUrls: updated });
+    };
+
+    const addBlueprint = () => {
+        if (!newBlueprintTitle.trim() || !newBlueprintUrl.trim()) return;
+        setFormData({
+            ...formData,
+            blueprints: [
+                ...(formData.blueprints || []),
+                { title: newBlueprintTitle.trim(), url: newBlueprintUrl.trim() }
+            ]
+        });
+        setNewBlueprintTitle('');
+        setNewBlueprintUrl('');
+    };
+
+    const removeBlueprint = (index: number) => {
+        const updated = [...(formData.blueprints || [])];
+        updated.splice(index, 1);
+        setFormData({ ...formData, blueprints: updated });
     };
 
     const uploadImageFile = async (file: File, type: 'gallery' | 'cover') => {
@@ -219,6 +250,7 @@ export const AdminScreen = () => {
             // Clean empty optional fields
             if (!saveData.coverUrl) delete saveData.coverUrl;
             if (!saveData.imageUrls || saveData.imageUrls.length === 0) delete saveData.imageUrls;
+            if (!saveData.blueprints || saveData.blueprints.length === 0) delete saveData.blueprints;
             if (!saveData.engine) delete saveData.engine;
             if (!saveData.youtubeId) delete saveData.youtubeId;
 
@@ -631,6 +663,43 @@ export const AdminScreen = () => {
                                 <TouchableOpacity style={[styles.addImageBtn, { marginLeft: 8 }]} onPress={pickGalleryImage} activeOpacity={0.7}>
                                     <Upload color="#fff" size={18} />
                                 </TouchableOpacity>
+                            </View>
+
+                            {/* Blueprints Section */}
+                            <Text style={styles.label}>Blueprints (blueprintue.com)</Text>
+                            {(formData.blueprints || []).map((bp, index) => (
+                                <View key={index} style={styles.imageUrlRow}>
+                                    <View style={{ flex: 1, paddingVertical: 4 }}>
+                                        <Text style={{ fontSize: 13, fontWeight: 'bold', color: '#fff' }}>{bp.title}</Text>
+                                        <Text style={{ fontSize: 11, color: '#777' }} numberOfLines={1}>{bp.url}</Text>
+                                    </View>
+                                    <TouchableOpacity onPress={() => removeBlueprint(index)} style={styles.removeImageBtn}>
+                                        <X color="#888" size={16} />
+                                    </TouchableOpacity>
+                                </View>
+                            ))}
+                            <View style={{ marginTop: 4 }}>
+                                <TextInput
+                                    style={[styles.input, { marginBottom: 6 }]}
+                                    value={newBlueprintTitle}
+                                    onChangeText={setNewBlueprintTitle}
+                                    placeholder="Blueprint Title (e.g. Player Movement)"
+                                    placeholderTextColor="#555"
+                                />
+                                <View style={styles.addImageRow}>
+                                    <View style={{ flex: 1, marginRight: 8 }}>
+                                        <TextInput
+                                            style={styles.input}
+                                            value={newBlueprintUrl}
+                                            onChangeText={setNewBlueprintUrl}
+                                            placeholder="Blueprint URL or ID"
+                                            placeholderTextColor="#555"
+                                        />
+                                    </View>
+                                    <TouchableOpacity style={styles.addImageBtn} onPress={addBlueprint} activeOpacity={0.7}>
+                                        <Plus color="#fff" size={18} />
+                                    </TouchableOpacity>
+                                </View>
                             </View>
 
                             <Text style={styles.label}>Order</Text>

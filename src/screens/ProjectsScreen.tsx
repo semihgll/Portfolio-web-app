@@ -37,7 +37,7 @@ const LOCAL_AWARDS: Record<string, any[]> = {
 const LOCAL_DEVLOGS: Record<string, any[]> = {
     'Pandoras Redemption': [
         {
-            date: '10 Nisan 2026',
+            date: '10 April 2026',
             version: 'v0.2.1',
             title: 'Environment element design with Procedural Content Generation',
             content: 'I created environment elements procedurally using Procedural Content Generation.',
@@ -49,6 +49,12 @@ const LOCAL_DEVLOGS: Record<string, any[]> = {
         },
 
     ],
+};
+
+const LOCAL_BLUEPRINTS: Record<string, { title: string; url: string }[]> = {
+    'Pandoras Redemption': [
+        { title: 'PCG Environment Generator', url: 'https://blueprintue.com/render/7z3u4-0a/' }
+    ]
 };
 
 interface FirestoreProject {
@@ -63,6 +69,7 @@ interface FirestoreProject {
     order?: number;
     coverUrl?: string;
     imageUrls?: string[];
+    blueprints?: { title: string; url: string }[];
 }
 
 export const ProjectsScreen = () => {
@@ -120,6 +127,10 @@ export const ProjectsScreen = () => {
         // Add dev logs
         if (LOCAL_DEVLOGS[project.title]) {
             enriched.devLogs = LOCAL_DEVLOGS[project.title];
+        }
+        // Add blueprints
+        if ((!project.blueprints || project.blueprints.length === 0) && LOCAL_BLUEPRINTS[project.title]) {
+            enriched.blueprints = LOCAL_BLUEPRINTS[project.title];
         }
         return enriched;
     };

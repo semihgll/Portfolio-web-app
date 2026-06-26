@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Modal, Pressable, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Modal, Pressable, Dimensions, Platform } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { ChevronLeft, X } from 'lucide-react-native';
 import { colors } from '../theme/colors';
@@ -7,11 +7,28 @@ import { GlassCard } from '../components/GlassCard';
 import { AbstractBackground } from '../components/AbstractBackground';
 import ProfessionalVideoPlayer from '../components/ProfessionalVideoPlayer';
 
+const getBlueprintRenderUrl = (urlOrId: string) => {
+    if (!urlOrId) return '';
+    const trimmed = urlOrId.trim();
+    if (/^[a-zA-Z0-9_-]+$/.test(trimmed)) {
+        return `https://blueprintue.com/render/${trimmed}/`;
+    }
+    const match = trimmed.match(/blueprintue\.com\/(blueprint|render)\/([a-zA-Z0-9_-]+)/);
+    if (match && match[2]) {
+        return `https://blueprintue.com/render/${match[2]}/`;
+    }
+    if (trimmed.startsWith('http') || trimmed.startsWith('//')) {
+        return trimmed;
+    }
+    return `https://blueprintue.com/render/${trimmed}/`;
+};
+
 export const GameDetailScreen = () => {
     const route = useRoute<any>();
     const navigation = useNavigation<any>();
     const game = route.params?.game;
     const [selectedImage, setSelectedImage] = useState<any>(null);
+    const [activeBlueprintIdx, setActiveBlueprintIdx] = useState(0);
 
     if (!game) return null;
 
@@ -86,6 +103,84 @@ export const GameDetailScreen = () => {
                                 )}
                             </View>
                         </GlassCard>
+                    </>
+                )}
+
+                {/* Blueprints Section */}
+                {game.blueprints && game.blueprints.length > 0 && (
+                    <>
+                        <Text style={styles.sectionLabel}>Blueprints</Text>
+                        <View style={styles.blueprintContainer}>
+                            {game.blueprints.length > 1 && (
+                                <ScrollView
+                                    horizontal
+                                    showsHorizontalScrollIndicator={false}
+                                    contentContainerStyle={styles.blueprintTabs}
+                                >
+                                    {game.blueprints.map((bp: any, index: number) => (
+                                        <TouchableOpacity
+                                            key={`bp-tab-${index}`}
+                                            style={[
+                                                styles.blueprintTab,
+                                                activeBlueprintIdx === index && styles.blueprintTabActive
+                                            ]}
+                                            onPress={() => setActiveBlueprintIdx(index)}
+                                            activeOpacity={0.8}
+                                        >
+                                            <Text
+                                                style={[
+                                                    styles.blueprintTabText,
+                                                    activeBlueprintIdx === index && styles.blueprintTabTextActive
+                                                ]}
+                                            >
+                                                {bp.title}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    ))}
+                                </ScrollView>
+                            )}
+
+                            <GlassCard style={styles.blueprintCard} intensity={20}>
+                                <View style={styles.blueprintHeader}>
+                                    <Text style={styles.blueprintTitle}>
+                                        {game.blueprints[activeBlueprintIdx]?.title || 'Blueprint'}
+                                    </Text>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            const url = getBlueprintRenderUrl(game.blueprints[activeBlueprintIdx]?.url);
+                                            const match = url.match(/blueprintue\.com\/render\/([a-zA-Z0-9_-]+)/);
+                                            const targetUrl = match && match[1]
+                                                ? `https://blueprintue.com/blueprint/${match[1]}/`
+                                                : url;
+                                            if (Platform.OS === 'web' && targetUrl) {
+                                                window.open(targetUrl, '_blank');
+                                            }
+                                        }}
+                                        style={styles.blueprintLinkBtn}
+                                        activeOpacity={0.7}
+                                    >
+                                        <Text style={styles.blueprintLinkText}>Open in blueprintue.com</Text>
+                                    </TouchableOpacity>
+                                </View>
+
+                                <View style={styles.blueprintIframeContainer}>
+                                    {game.blueprints[activeBlueprintIdx] && (
+                                        <iframe
+                                            width="100%"
+                                            height="100%"
+                                            src={getBlueprintRenderUrl(game.blueprints[activeBlueprintIdx].url)}
+                                            frameBorder="0"
+                                            scrolling="no"
+                                            allowFullScreen
+                                            style={{ borderRadius: 8, backgroundColor: '#151515' }}
+                                        />
+                                    )}
+                                </View>
+                                <Text style={styles.blueprintHelpText}>
+                                    💡 Drag to pan. Scroll wheel (or pinch zoom) to zoom the node graph.
+                                </Text>
+                            </GlassCard>
+                        </View>
                     </>
                 )}
 
@@ -473,5 +568,74 @@ const styles = StyleSheet.create({
     devLogImage: {
         width: '100%',
         height: '100%',
+    },
+    blueprintContainer: {
+        marginBottom: 20,
+    },
+    blueprintTabs: {
+        flexDirection: 'row',
+        marginBottom: 12,
+        gap: 8,
+    },
+    blueprintTab: {
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        borderRadius: 20,
+        backgroundColor: 'rgba(255,255,255,0.03)',
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.08)',
+    },
+    blueprintTabActive: {
+        backgroundColor: 'rgba(255,255,255,0.1)',
+        borderColor: '#fff',
+    },
+    blueprintTabText: {
+        fontSize: 13,
+        color: colors.textMuted,
+        fontWeight: '600',
+    },
+    blueprintTabTextActive: {
+        color: '#fff',
+    },
+    blueprintCard: {
+        padding: 20,
+        backgroundColor: 'rgba(20, 20, 20, 0.4)',
+    },
+    blueprintHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 12,
+        flexWrap: 'wrap',
+        gap: 8,
+    },
+    blueprintTitle: {
+        fontSize: 16,
+        fontWeight: '700',
+        color: colors.text,
+    },
+    blueprintLinkBtn: {
+        paddingVertical: 4,
+        paddingHorizontal: 8,
+    },
+    blueprintLinkText: {
+        fontSize: 12,
+        color: colors.textMuted,
+        textDecorationLine: 'underline',
+    },
+    blueprintIframeContainer: {
+        width: '100%',
+        height: 500,
+        borderRadius: 8,
+        overflow: 'hidden',
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.08)',
+        backgroundColor: '#151515',
+    },
+    blueprintHelpText: {
+        fontSize: 11,
+        color: colors.textMuted,
+        marginTop: 8,
+        textAlign: 'center',
     },
 });
