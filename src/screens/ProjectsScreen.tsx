@@ -57,6 +57,48 @@ const LOCAL_BLUEPRINTS: Record<string, { title: string; url: string }[]> = {
     ]
 };
 
+export interface CodeSnippet {
+    title: string;
+    code: string;
+    language: string;
+    description?: string;
+}
+
+const LOCAL_CODESNIPPETS: Record<string, CodeSnippet[]> = {
+    'Pandoras Redemption': [
+        {
+            title: 'AegisGameplayAbility.h',
+            language: 'cpp',
+            description: 'Custom gameplay ability class for the AEGIS combat system, integrating GAS (Gameplay Ability System) attributes.',
+            code: `#pragma once
+
+#include "CoreMinimal.h"
+#include "Abilities/GameplayAbility.h"
+#include "AegisGameplayAbility.generated.h"
+
+/**
+ * UAegisGameplayAbility
+ * Base class for abilities in the AEGIS project.
+ */
+UCLASS()
+class AEGIS_API UAegisGameplayAbility : public UGameplayAbility
+{
+    GENERATED_BODY()
+
+public:
+    UAegisGameplayAbility();
+
+    // The gameplay tag container representing this ability
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities")
+    FGameplayTagContainer AbilityTags;
+
+    // Triggered when the ability is successfully granted
+    virtual void OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
+};`
+        }
+    ]
+};
+
 interface FirestoreProject {
     id: string;
     title: string;
@@ -70,6 +112,7 @@ interface FirestoreProject {
     coverUrl?: string;
     imageUrls?: string[];
     blueprints?: { title: string; url: string }[];
+    codeSnippets?: CodeSnippet[];
 }
 
 export const ProjectsScreen = () => {
@@ -131,6 +174,10 @@ export const ProjectsScreen = () => {
         // Add blueprints
         if ((!project.blueprints || project.blueprints.length === 0) && LOCAL_BLUEPRINTS[project.title]) {
             enriched.blueprints = LOCAL_BLUEPRINTS[project.title];
+        }
+        // Add code snippets
+        if ((!project.codeSnippets || project.codeSnippets.length === 0) && LOCAL_CODESNIPPETS[project.title]) {
+            enriched.codeSnippets = LOCAL_CODESNIPPETS[project.title];
         }
         return enriched;
     };

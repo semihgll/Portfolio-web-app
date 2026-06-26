@@ -6,6 +6,7 @@ import { colors } from '../theme/colors';
 import { GlassCard } from '../components/GlassCard';
 import { AbstractBackground } from '../components/AbstractBackground';
 import ProfessionalVideoPlayer from '../components/ProfessionalVideoPlayer';
+import { CodeSnippetViewer } from '../components/CodeSnippetViewer';
 
 const getBlueprintRenderUrl = (urlOrId: string) => {
     if (!urlOrId) return '';
@@ -181,6 +182,14 @@ export const GameDetailScreen = () => {
                                 </Text>
                             </GlassCard>
                         </View>
+                    </>
+                )}
+
+                {/* Code Snippets Section */}
+                {game.codeSnippets && game.codeSnippets.length > 0 && (
+                    <>
+                        <Text style={styles.sectionLabel}>Code Snippets</Text>
+                        <CodeSnippetViewer snippets={game.codeSnippets} />
                     </>
                 )}
 

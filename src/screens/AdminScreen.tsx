@@ -16,6 +16,13 @@ import {
 
 const IMGBB_API_KEY = 'a6eea151b42baaf26acfda0926f9afff';
 
+interface CodeSnippet {
+    title: string;
+    code: string;
+    language: string;
+    description?: string;
+}
+
 interface Project {
     id?: string;
     title: string;
@@ -29,6 +36,7 @@ interface Project {
     coverUrl?: string;
     imageUrls?: string[];
     blueprints?: { title: string; url: string }[];
+    codeSnippets?: CodeSnippet[];
 }
 
 const CATEGORIES = ['Game Dev', 'Mobile App', '3D Art', 'Writing / Lore'];
@@ -44,6 +52,7 @@ const EMPTY_PROJECT: Project = {
     coverUrl: '',
     imageUrls: [],
     blueprints: [],
+    codeSnippets: [],
 };
 
 interface Visitor {
@@ -66,6 +75,10 @@ export const AdminScreen = () => {
     const [newImageUrl, setNewImageUrl] = useState('');
     const [newBlueprintTitle, setNewBlueprintTitle] = useState('');
     const [newBlueprintUrl, setNewBlueprintUrl] = useState('');
+    const [newSnippetTitle, setNewSnippetTitle] = useState('');
+    const [newSnippetCode, setNewSnippetCode] = useState('');
+    const [newSnippetLanguage, setNewSnippetLanguage] = useState('cpp');
+    const [newSnippetDescription, setNewSnippetDescription] = useState('');
     const [uploading, setUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const coverInputRef = useRef<HTMLInputElement | null>(null);
@@ -113,6 +126,10 @@ export const AdminScreen = () => {
         setNewImageUrl('');
         setNewBlueprintTitle('');
         setNewBlueprintUrl('');
+        setNewSnippetTitle('');
+        setNewSnippetCode('');
+        setNewSnippetLanguage('cpp');
+        setNewSnippetDescription('');
         setModalVisible(true);
     };
 
@@ -121,11 +138,16 @@ export const AdminScreen = () => {
         setFormData({
             ...project,
             imageUrls: project.imageUrls || [],
-            blueprints: project.blueprints || []
+            blueprints: project.blueprints || [],
+            codeSnippets: project.codeSnippets || []
         });
         setNewImageUrl('');
         setNewBlueprintTitle('');
         setNewBlueprintUrl('');
+        setNewSnippetTitle('');
+        setNewSnippetCode('');
+        setNewSnippetLanguage('cpp');
+        setNewSnippetDescription('');
         setModalVisible(true);
     };
 
@@ -161,6 +183,32 @@ export const AdminScreen = () => {
         const updated = [...(formData.blueprints || [])];
         updated.splice(index, 1);
         setFormData({ ...formData, blueprints: updated });
+    };
+
+    const addCodeSnippet = () => {
+        if (!newSnippetTitle.trim() || !newSnippetCode.trim() || !newSnippetLanguage.trim()) return;
+        setFormData({
+            ...formData,
+            codeSnippets: [
+                ...(formData.codeSnippets || []),
+                {
+                    title: newSnippetTitle.trim(),
+                    code: newSnippetCode,
+                    language: newSnippetLanguage.trim(),
+                    description: newSnippetDescription.trim() || undefined
+                }
+            ]
+        });
+        setNewSnippetTitle('');
+        setNewSnippetCode('');
+        setNewSnippetLanguage('cpp');
+        setNewSnippetDescription('');
+    };
+
+    const removeCodeSnippet = (index: number) => {
+        const updated = [...(formData.codeSnippets || [])];
+        updated.splice(index, 1);
+        setFormData({ ...formData, codeSnippets: updated });
     };
 
     const uploadImageFile = async (file: File, type: 'gallery' | 'cover') => {
@@ -251,6 +299,7 @@ export const AdminScreen = () => {
             if (!saveData.coverUrl) delete saveData.coverUrl;
             if (!saveData.imageUrls || saveData.imageUrls.length === 0) delete saveData.imageUrls;
             if (!saveData.blueprints || saveData.blueprints.length === 0) delete saveData.blueprints;
+            if (!saveData.codeSnippets || saveData.codeSnippets.length === 0) delete saveData.codeSnippets;
             if (!saveData.engine) delete saveData.engine;
             if (!saveData.youtubeId) delete saveData.youtubeId;
 
@@ -700,6 +749,77 @@ export const AdminScreen = () => {
                                         <Plus color="#fff" size={18} />
                                     </TouchableOpacity>
                                 </View>
+                            </View>
+
+                            {/* Code Snippets Section */}
+                            <Text style={styles.label}>Code Snippets</Text>
+                            {(formData.codeSnippets || []).map((snip, index) => (
+                                <View key={index} style={styles.imageUrlRow}>
+                                    <View style={{ flex: 1, paddingVertical: 4 }}>
+                                        <Text style={{ fontSize: 13, fontWeight: 'bold', color: '#fff' }}>{snip.title}</Text>
+                                        <Text style={{ fontSize: 11, color: '#777' }}>Language: {snip.language}</Text>
+                                    </View>
+                                    <TouchableOpacity onPress={() => removeCodeSnippet(index)} style={styles.removeImageBtn}>
+                                        <X color="#888" size={16} />
+                                    </TouchableOpacity>
+                                </View>
+                            ))}
+                            <View style={{ marginTop: 4 }}>
+                                <TextInput
+                                    style={[styles.input, { marginBottom: 6 }]}
+                                    value={newSnippetTitle}
+                                    onChangeText={setNewSnippetTitle}
+                                    placeholder="Snippet Title (e.g. AbilityTagCheck.cpp)"
+                                    placeholderTextColor="#555"
+                                />
+                                <TextInput
+                                    style={[styles.input, { marginBottom: 6 }]}
+                                    value={newSnippetDescription}
+                                    onChangeText={setNewSnippetDescription}
+                                    placeholder="Snippet Description (optional)"
+                                    placeholderTextColor="#555"
+                                />
+                                <Text style={[styles.label, { marginTop: 4, marginBottom: 4, fontSize: 11 }]}>Language</Text>
+                                <View style={[styles.categoryRow, { marginBottom: 8 }]}>
+                                    {['cpp', 'cs', 'typescript', 'javascript', 'json', 'ini'].map((lang) => (
+                                        <TouchableOpacity
+                                            key={lang}
+                                            style={[
+                                                styles.categoryChip,
+                                                newSnippetLanguage === lang && styles.categoryChipActive,
+                                                { paddingVertical: 6, paddingHorizontal: 10 }
+                                            ]}
+                                            onPress={() => setNewSnippetLanguage(lang)}
+                                        >
+                                            <Text
+                                                style={[
+                                                    styles.categoryChipText,
+                                                    newSnippetLanguage === lang && styles.categoryChipTextActive,
+                                                    { fontSize: 11 }
+                                                ]}
+                                            >
+                                                {lang.toUpperCase()}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    ))}
+                                </View>
+                                <TextInput
+                                    style={[styles.input, styles.textArea, { fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace', fontSize: 12, marginBottom: 8 }]}
+                                    value={newSnippetCode}
+                                    onChangeText={setNewSnippetCode}
+                                    placeholder="Paste or write your code here..."
+                                    placeholderTextColor="#555"
+                                    multiline
+                                    numberOfLines={10}
+                                />
+                                <TouchableOpacity 
+                                    style={[styles.addBtn, { marginBottom: 12, marginTop: 4 }]} 
+                                    onPress={addCodeSnippet} 
+                                    activeOpacity={0.7}
+                                >
+                                    <Plus color="#fff" size={16} />
+                                    <Text style={[styles.addBtnText, { fontSize: 14 }]}>Add Code Snippet</Text>
+                                </TouchableOpacity>
                             </View>
 
                             <Text style={styles.label}>Order</Text>
